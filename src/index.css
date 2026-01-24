@@ -1,0 +1,316 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+@layer base {
+  html {
+    font-family: theme('fontFamily.sans');
+  }
+  body {
+    @apply bg-gradient-to-b from-orange-50 to-red-50 text-text-body;
+  }
+  h1, h2, h3 {
+    @apply text-text-heading;
+  }
+}
+
+@layer components {
+  .bg-app {
+    @apply bg-gradient-to-b from-orange-50 to-red-50;
+  }
+  .heading-3xl {
+    @apply text-5xl leading-tight font-extrabold text-text-heading;
+  }
+  .heading-2xl {
+    @apply text-3xl leading-tight font-bold text-text-heading;
+  }
+  .heading-xl {
+    @apply text-xl leading-tight font-bold text-text-heading;
+  }
+  .text-body {
+    @apply text-base leading-relaxed text-text-body;
+  }
+  .text-body-sm {
+    @apply text-sm leading-relaxed text-text-body;
+  }
+  .btn-primary {
+    @apply bg-primary text-white rounded-xl px-4 py-2 shadow-md hover:bg-red-600;
+  }
+  .card {
+    @apply rounded-2xl shadow-lg bg-white/90 dark:bg-neutral-900/90;
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+  }
+  .animate-pulse-slow {
+    animation: pulseSlow 3s ease-in-out infinite;
+  }
+  .glare-hover {
+    position: relative;
+    overflow: hidden;
+  }
+  .glare-hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transition: left 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .glare-hover:hover::before {
+    left: 100%;
+  }
+  .glare-hover > * {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 300% auto;
+  background-image: linear-gradient(
+    90deg,
+    #EF4444 0%,
+    #F97316 20%,
+    #EF4444 40%,
+    #F97316 60%,
+    #EF4444 80%,
+    #F97316 100%
+  );
+  animation: gradientShift 2.5s linear infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Animated Background Gradient */
+@keyframes backgroundGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.animated-bg::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    -45deg,
+    #fef3e2 0%,
+    #fef2f2 20%,
+    #fff7ed 40%,
+    #fef3e2 60%,
+    #fef2f2 80%,
+    #fff7ed 100%
+  );
+  background-size: 400% 400%;
+  animation: backgroundGradient 8s ease infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.animated-bg::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(251, 146, 60, 0.08) 0%,
+    rgba(239, 68, 68, 0.08) 30%,
+    rgba(251, 146, 60, 0.08) 60%,
+    rgba(239, 68, 68, 0.08) 100%
+  );
+  background-size: 300% 300%;
+  animation: backgroundGradient 10s ease infinite reverse;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.animated-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Aurora Effect */
+.aurora-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.aurora-bg::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(251, 146, 60, 0.5) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(239, 68, 68, 0.5) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.5) 0%, transparent 50%);
+  animation: aurora calc(20s / 1.0) ease-in-out infinite;
+  z-index: 0;
+  mix-blend-mode: screen;
+  opacity: 0.5;
+}
+
+.aurora-bg::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle at 70% 20%, rgba(239, 68, 68, 0.5) 0%, transparent 50%),
+    radial-gradient(circle at 30% 80%, rgba(251, 146, 60, 0.5) 0%, transparent 50%),
+    radial-gradient(circle at 60% 60%, rgba(249, 115, 22, 0.5) 0%, transparent 50%);
+  animation: aurora calc(20s / 1.0) ease-in-out infinite reverse;
+  z-index: 0;
+  mix-blend-mode: screen;
+  opacity: 0.5;
+}
+
+@keyframes aurora {
+  0%, 100% {
+    transform: translate(calc(0 * 1.0), calc(0 * 1.0)) rotate(calc(0deg * 1.0)) scale(1.0);
+    opacity: 0.5;
+  }
+  25% {
+    transform: translate(calc(10% * 1.0), calc(-10% * 1.0)) rotate(calc(5deg * 1.0)) scale(1.0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(calc(-5% * 1.0), calc(5% * 1.0)) rotate(calc(-3deg * 1.0)) scale(1.0);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(calc(-10% * 1.0), calc(10% * 1.0)) rotate(calc(3deg * 1.0)) scale(1.0);
+    opacity: 0.5;
+  }
+}
+
+.aurora-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Leaflet Map Styles */
+.leaflet-container {
+  background-color: #f5f5f5;
+  font-family: inherit;
+}
+
+.dark .leaflet-container {
+  background-color: #1a1a1a;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
+
+.leaflet-popup-content {
+  margin: 12px;
+  font-size: 14px;
+}
+
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.leaflet-control-zoom a {
+  background-color: white;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.dark .leaflet-control-zoom a {
+  background-color: #374151;
+  color: #f3f4f6;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #f3f4f6;
+}
+
+.dark .leaflet-control-zoom a:hover {
+  background-color: #4b5563;
+}

@@ -1,0 +1,230 @@
+import { Home, Heart, MapPin, Sun, Thermometer, Users } from 'lucide-react'
+import { useAuth } from '../../context/AuthContext.jsx'
+import { useNavigate } from 'react-router-dom'
+import { useEffect, useState, useRef } from 'react'
+
+export default function LandingPage() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+  const [isVisible, setIsVisible] = useState({ hero: true })
+  const heroRef = useRef(null)
+  const featuresRef = useRef(null)
+  const stepsRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible((prev) => ({ ...prev, [entry.target.id]: true }))
+          }
+        })
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    )
+
+    const refs = [
+      { ref: heroRef, id: 'hero' },
+      { ref: featuresRef, id: 'features' },
+      { ref: stepsRef, id: 'steps' }
+    ]
+
+    refs.forEach(({ ref, id }) => {
+      if (ref.current) {
+        ref.current.id = id
+        observer.observe(ref.current)
+      }
+    })
+
+    return () => {
+      refs.forEach(({ ref }) => {
+        if (ref.current) observer.unobserve(ref.current)
+      })
+    }
+  }, [])
+
+  const onGetStarted = async () => {
+    try { if (user) await logout() } catch {}
+    navigate('/signup')
+  }
+
+  const onSignUp = () => {
+    navigate('/signup')
+  }
+
+  return (
+    <div className="font-display text-[#212529] dark:text-gray-200 min-h-screen animated-bg">
+      <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+        <div className="flex h-full grow flex-col">
+          <div className="flex flex-1 justify-center py-5">
+            <div className="flex flex-col max-w-[1024px] flex-1">
+              {/* TopNavBar */}
+              <header className="flex items-center justify-between whitespace-nowrap px-10 py-4 animate-fade-in">
+                <div className="flex items-center gap-4 text-[#212529] dark:text-white cursor-pointer" onClick={() => navigate('/')}>
+                  <Sun className="h-7 w-7 text-amber-500" />
+                  <h2 className="text-xl font-bold tracking-tight">HeatSense AI</h2>
+                </div>
+                <div className="hidden md:flex flex-1 justify-center items-center gap-8 text-[#212529] dark:text-gray-300">
+                  <a 
+                    className="text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors relative hover:after:content-[''] hover:after:absolute hover:after:bottom-[-4px] hover:after:left-0 hover:after:w-full hover:after:h-[2px] hover:after:bg-primary cursor-pointer" 
+                    href="#features"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      const featuresSection = document.getElementById('features')
+                      if (featuresSection) {
+                        featuresSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                      }
+                    }}
+                  >
+                    Features
+                  </a>
+                  <a className="text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors relative hover:after:content-[''] hover:after:absolute hover:after:bottom-[-4px] hover:after:left-0 hover:after:w-full hover:after:h-[2px] hover:after:bg-primary" href="/about" onClick={(e) => { e.preventDefault(); navigate('/about'); }}>About</a>
+                  <a className="text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors relative hover:after:content-[''] hover:after:absolute hover:after:bottom-[-4px] hover:after:left-0 hover:after:w-full hover:after:h-[2px] hover:after:bg-primary" href="/contact" onClick={(e) => { e.preventDefault(); navigate('/contact'); }}>Contact</a>
+                </div>
+                <div className="flex items-center gap-4">
+                  <button 
+                    onClick={onSignUp}
+                    className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-[#212529] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    <span className="truncate">Sign Up</span>
+                  </button>
+                </div>
+              </header>
+
+              {/* HeroSection */}
+              <div ref={heroRef} id="hero" className="px-4 py-16 md:py-24 pb-32 md:pb-40 text-center">
+                <div className={`flex flex-col gap-6 items-center transition-all duration-1000 ${isVisible.hero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                  <div className="flex flex-col gap-4 text-center max-w-3xl mx-auto">
+                    <h1 className="text-4xl font-black leading-[1.2] tracking-[-0.033em] md:text-6xl md:leading-[1.15] pb-2">
+                      <span className="text-[#212529] dark:text-white">Chennai's Shield</span>{' '}
+                      <span className="animate-gradient inline-block pb-1">Against Extreme Heat.</span>
+                    </h1>
+                    <h2 className={`text-[#6C757D] dark:text-gray-400 text-base font-normal leading-normal md:text-lg transition-all duration-1000 delay-300 ${isVisible.hero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                      Real-time alerts designed for families in temporary housing. We help you protect children, elders, and loved ones from dangerous temperatures.
+                    </h2>
+                  </div>
+                  <button 
+                    onClick={onGetStarted}
+                    className={`flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300 hover:bg-red-600 hover:scale-105 active:scale-95 ${isVisible.hero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} delay-500`}
+                  >
+                    <span className="truncate">Join the Safety Network</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* FeatureSection */}
+              <div ref={featuresRef} id="features" className="flex flex-col gap-10 px-4 py-16 md:py-24 mt-16 md:mt-24">
+                <div className={`flex flex-col gap-4 max-w-3xl text-center mx-auto transition-all duration-1000 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                  <h1 className="text-[#212529] dark:text-white tracking-tight text-3xl font-bold leading-tight md:text-4xl">
+                    How We Protect Your Community
+                  </h1>
+                  <p className="text-[#6C757D] dark:text-gray-400 text-base font-normal leading-normal">
+                    Built specifically for Chennai's neighborhoods, our community-first approach ensures every family gets the protection they need.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className={`glare-hover flex flex-1 gap-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-6 flex-col text-center items-center shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-500 cursor-pointer ${isVisible.features ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`} style={{ transitionDelay: '200ms' }}>
+                    <div className={`text-primary text-4xl mb-2 transform hover:scale-110 transition-all duration-500 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '400ms' }}>
+                      <div className="flex items-center justify-center gap-1">
+                        <Home className="h-10 w-10 text-primary" />
+                        <Thermometer className="h-8 w-8 text-primary opacity-80" />
+                      </div>
+                    </div>
+                    <div className={`flex flex-col gap-1 transition-all duration-500 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '500ms' }}>
+                      <h2 className="text-[#212529] dark:text-white text-lg font-bold leading-tight">Housing-Aware Risk Score</h2>
+                      <p className="text-[#6C757D] dark:text-gray-400 text-sm font-normal leading-normal">Our AI calculates heat risk based on your specific roof type (Metal Sheets vs. Concrete), not just the weather outside.</p>
+                    </div>
+                  </div>
+                  <div className={`glare-hover flex flex-1 gap-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-6 flex-col text-center items-center shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-500 cursor-pointer ${isVisible.features ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`} style={{ transitionDelay: '400ms' }}>
+                    <div className={`text-secondary text-4xl mb-2 transform hover:scale-110 transition-all duration-500 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '600ms' }}>
+                      <div className="flex items-center justify-center gap-1">
+                        <Users className="h-10 w-10 text-secondary" />
+                        <Heart className="h-8 w-8 text-secondary opacity-80" />
+                      </div>
+                    </div>
+                    <div className={`flex flex-col gap-1 transition-all duration-500 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '700ms' }}>
+                      <h2 className="text-[#212529] dark:text-white text-lg font-bold leading-tight">Protecting the Vulnerable</h2>
+                      <p className="text-[#6C757D] dark:text-gray-400 text-sm font-normal leading-normal">Specialized advisories for children, pregnant women, and the elderly to prevent heatstroke and dehydration.</p>
+                    </div>
+                  </div>
+                  <div className={`glare-hover flex flex-1 gap-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-6 flex-col text-center items-center shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-500 cursor-pointer ${isVisible.features ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`} style={{ transitionDelay: '600ms' }}>
+                    <div className={`text-primary text-4xl mb-2 transform hover:scale-110 transition-all duration-500 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '800ms' }}>
+                      <MapPin className="h-10 w-10 text-primary" />
+                    </div>
+                    <div className={`flex flex-col gap-1 transition-all duration-500 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '900ms' }}>
+                      <h2 className="text-[#212529] dark:text-white text-lg font-bold leading-tight">Hyper-Local Canal Monitoring</h2>
+                      <p className="text-[#6C757D] dark:text-gray-400 text-sm font-normal leading-normal">Precision tracking for heat pockets in dense settlements like Triplicane and Kotturpuram.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* How It Works Section */}
+              <div ref={stepsRef} id="steps" className="px-4 py-16 md:py-24">
+                <div className={`flex flex-col gap-4 max-w-3xl text-center mx-auto mb-12 transition-all duration-1000 ${isVisible.steps ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                  <h1 className="text-[#212529] dark:text-white tracking-tight text-3xl font-bold leading-tight md:text-4xl">
+                    How It Works
+                  </h1>
+                  <p className="text-[#6C757D] dark:text-gray-400 text-base font-normal leading-normal">
+                    A simple yet powerful process to keep you informed and safe.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-6 relative">
+                  {/* Dotted line for desktop */}
+                  <div className={`hidden md:block absolute top-1/2 left-0 h-px -translate-y-1/2 transition-all duration-1000 ${isVisible.steps ? 'w-full opacity-100' : 'w-0 opacity-0'}`}>
+                    <svg className="text-gray-300 dark:text-gray-600" height="2" width="100%">
+                      <line stroke="currentColor" strokeDasharray="8 8" strokeWidth="2" x1="0" x2="100%" y1="1" y2="1"></line>
+                    </svg>
+                  </div>
+                  <div className={`relative flex flex-col items-center text-center gap-4 px-2 transition-all duration-700 ${isVisible.steps ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '200ms' }}>
+                    <div className="flex items-center justify-center size-12 rounded-full bg-primary/20 text-primary border-4 border-[#f8f9fa] dark:border-[#101522] flex-shrink-0 transform hover:scale-110 transition-transform duration-300">
+                      <span className="font-bold text-lg">1</span>
+                    </div>
+                    <h3 className="font-bold text-[#212529] dark:text-white text-base leading-tight min-h-[2.5rem] flex items-center justify-center">Profile Your Home</h3>
+                    <p className="text-sm text-[#6C757D] dark:text-gray-400 leading-relaxed max-w-[240px]">Tell us about your housing type (e.g., Tin Shed, Concrete) and who lives with you (Children, Seniors) to get accurate risk data.</p>
+                  </div>
+                  <div className={`relative flex flex-col items-center text-center gap-4 px-2 transition-all duration-700 ${isVisible.steps ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '400ms' }}>
+                    <div className="flex items-center justify-center size-12 rounded-full bg-secondary/20 text-secondary border-4 border-[#f8f9fa] dark:border-[#101522] flex-shrink-0 transform hover:scale-110 transition-transform duration-300">
+                      <span className="font-bold text-lg">2</span>
+                    </div>
+                    <h3 className="font-bold text-[#212529] dark:text-white text-base leading-tight min-h-[2.5rem] flex items-center justify-center">Real-Time Weather Monitoring</h3>
+                    <p className="text-sm text-[#6C757D] dark:text-gray-400 leading-relaxed max-w-[240px]">We fetch live weather data (temperature, humidity, feels-like temp) for your exact location using GPS and trusted weather APIs.</p>
+                  </div>
+                  <div className={`relative flex flex-col items-center text-center gap-4 px-2 transition-all duration-700 ${isVisible.steps ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '600ms' }}>
+                    <div className="flex items-center justify-center size-12 rounded-full bg-primary/20 text-primary border-4 border-[#f8f9fa] dark:border-[#101522] flex-shrink-0 transform hover:scale-110 transition-transform duration-300">
+                      <span className="font-bold text-lg">3</span>
+                    </div>
+                    <h3 className="font-bold text-[#212529] dark:text-white text-base leading-tight min-h-[2.5rem] flex items-center justify-center">Personalized Risk Assessment</h3>
+                    <p className="text-sm text-[#6C757D] dark:text-gray-400 leading-relaxed max-w-[240px]">Our AI algorithm combines your profile with current weather conditions to calculate your personal heat risk score (Low, Medium, High, or Critical).</p>
+                  </div>
+                  <div className={`relative flex flex-col items-center text-center gap-4 px-2 transition-all duration-700 ${isVisible.steps ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '800ms' }}>
+                    <div className="flex items-center justify-center size-12 rounded-full bg-secondary/20 text-secondary border-4 border-[#f8f9fa] dark:border-[#101522] flex-shrink-0 transform hover:scale-110 transition-transform duration-300">
+                      <span className="font-bold text-lg">4</span>
+                    </div>
+                    <h3 className="font-bold text-[#212529] dark:text-white text-base leading-tight min-h-[2.5rem] flex items-center justify-center">Get Tailored Health Guidance</h3>
+                    <p className="text-sm text-[#6C757D] dark:text-gray-400 leading-relaxed max-w-[240px]">Receive specific, actionable recommendations based on your risk level—when to drink water, avoid outdoor work, and seek medical help.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <footer className="mt-20 border-t border-gray-200 dark:border-gray-700 px-10 py-8">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                  <div className="flex items-center gap-3 text-[#212529] dark:text-white">
+                    <Sun className="h-6 w-6 text-amber-500" />
+                    <h2 className="text-lg font-bold">HeatSense AI</h2>
+                  </div>
+                  <p className="text-sm text-[#6C757D] dark:text-gray-400">© 2024 HeatSense AI. All rights reserved.</p>
+                  <div className="flex items-center gap-6 text-[#6C757D] dark:text-gray-400">
+                    <a className="text-sm hover:text-primary dark:hover:text-primary transition-colors" href="#">Privacy Policy</a>
+                    <a className="text-sm hover:text-primary dark:hover:text-primary transition-colors" href="#">Terms of Service</a>
+                  </div>
+                </div>
+              </footer>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

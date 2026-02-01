@@ -568,3 +568,5 @@ For questions or support, please contact the development team.
 **Built with ❤️ for Chennai's families and vulnerable communities.**
 
 > **Mission**: Climate justice for Chennai. Protecting families in temporary housing, children, the elderly, and pregnant women from extreme heat through housing-aware risk assessment and community-focused resources.
+
+Made by Hemal

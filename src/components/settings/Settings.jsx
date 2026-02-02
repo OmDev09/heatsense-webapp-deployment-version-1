@@ -106,7 +106,7 @@ export default function Settings() {
       })
       .catch(() => {
         if (!mounted) return
-        setError('Failed to load settings')
+        setError(t('settings.errors.loadFailed'))
         setLoading(false)
       })
     return () => { mounted = false }
@@ -173,7 +173,7 @@ export default function Settings() {
   }
 
   const onDeleteAccount = async () => {
-    const ok = window.confirm('Delete your account and all data?')
+    const ok = window.confirm(t('settings.errors.deleteConfirm'))
     if (!ok) return
     setSaving(true)
     await deleteUserAccount(user.id)
@@ -184,7 +184,7 @@ export default function Settings() {
 
   const onChangePassword = async () => {
     if (!newPassword || newPassword.length < 6) {
-      setError('Password must be at least 6 characters')
+      setError(t('settings.errors.passwordMin'))
       return
     }
     setError('')
@@ -192,7 +192,7 @@ export default function Settings() {
     const { error: err } = await supabase.auth.updateUser({ password: newPassword })
     setSaving(false)
     if (err) {
-      setError(err.message || 'Failed to change password')
+      setError(err.message || t('settings.errors.passwordError'))
     } else {
       setChangingPassword(false)
       setNewPassword('')
@@ -220,7 +220,7 @@ export default function Settings() {
     setSaving(true)
     try {
       if (!navigator.geolocation) {
-        setError('Geolocation is not supported by your browser.')
+        setError(t('settings.errors.geolocationUnsupported'))
         setSaving(false)
         return
       }
@@ -229,16 +229,16 @@ export default function Settings() {
         navigator.geolocation.getCurrentPosition(
           resolve,
           (err) => {
-            let errorMessage = 'Location permission denied or unavailable'
+            let errorMessage = t('settings.errors.locationDenied')
             switch (err.code) {
               case err.PERMISSION_DENIED:
-                errorMessage = 'Location permission denied. Please enable it in your browser settings.'
+                errorMessage = t('settings.errors.locationDenied')
                 break
               case err.POSITION_UNAVAILABLE:
-                errorMessage = 'Location information is unavailable.'
+                errorMessage = t('settings.errors.locationUnavailable')
                 break
               case err.TIMEOUT:
-                errorMessage = 'The request to get user location timed out.'
+                errorMessage = t('settings.errors.locationTimeout')
                 break
               default:
                 errorMessage = `Geolocation error: ${err.message}`
@@ -269,7 +269,7 @@ export default function Settings() {
       setChangingLocation(false)
       setLocationMethod(null)
     } catch (err) {
-      setError(err.message || 'Failed to update location')
+      setError(err.message || t('settings.errors.locationError'))
     } finally {
       setSaving(false)
     }
@@ -277,7 +277,7 @@ export default function Settings() {
 
   const onChangeLocationManual = async () => {
     if (!selectedCity) {
-      setError('Please select a city')
+      setError(t('settings.errors.selectCity'))
       return
     }
     setError('')
@@ -291,7 +291,7 @@ export default function Settings() {
       setLocationMethod(null)
       setSelectedCity('')
     } catch (err) {
-      setError(err.message || 'Failed to update location')
+      setError(err.message || t('settings.errors.locationError'))
     } finally {
       setSaving(false)
     }
@@ -300,7 +300,7 @@ export default function Settings() {
   const onSubmitContact = async (e) => {
     e.preventDefault()
     if (!contactForm.name || !contactForm.email || !contactForm.message) {
-      setError('Please fill in all fields')
+      setError(t('settings.errors.fillAllFields'))
       return
     }
     setError('')
@@ -322,7 +322,7 @@ export default function Settings() {
       // Clear success message after 5 seconds
       setTimeout(() => setContactSuccess(false), 5000)
     } catch (err) {
-      setError('Failed to send message. Please try again or email us directly at support@heatsense.ai')
+      setError(t('settings.errors.contactError'))
     } finally {
       setContactSubmitting(false)
     }
@@ -358,13 +358,13 @@ export default function Settings() {
                 </Link>
                 <div className="rounded-xl p-4 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex items-center justify-between min-h-[70px]">
                   <div className="flex items-center gap-3"><Lock className="h-5 w-5" /><div><div className="font-medium">{t('settings.account.changePassword')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.account.changePasswordDesc')}</div></div></div>
-                  <button className="rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800" onClick={() => setChangingPassword(true)}>Change</button>
+                  <button className="rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800" onClick={() => setChangingPassword(true)}>{t('settings.account.change')}</button>
                 </div>
                 {changingPassword && (
                   <div className="mt-3 flex items-center gap-2">
-                    <input className="border border-neutral-200 dark:border-gray-700 rounded-2xl px-3 py-2 flex-1 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500" type="password" placeholder="New password" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-                    <button className="btn-primary rounded-2xl px-4 py-2" onClick={onChangePassword} disabled={saving}>Save</button>
-                    <button className="rounded-2xl px-4 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800" onClick={() => setChangingPassword(false)} disabled={saving}>Cancel</button>
+                    <input className="border border-neutral-200 dark:border-gray-700 rounded-2xl px-3 py-2 flex-1 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500" type="password" placeholder={t('settings.account.newPassword')} value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                    <button className="btn-primary rounded-2xl px-4 py-2" onClick={onChangePassword} disabled={saving}>{t('settings.account.save')}</button>
+                    <button className="rounded-2xl px-4 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800" onClick={() => setChangingPassword(false)} disabled={saving}>{t('settings.account.cancel')}</button>
                   </div>
                 )}
               </div>
@@ -415,13 +415,13 @@ export default function Settings() {
                               className="flex-1 rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
                               onClick={() => setLocationMethod('gps')}
                             >
-                              Use GPS
+                              {t('settings.preferences.useGps')}
                             </button>
                             <button
                               className="flex-1 rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
                               onClick={() => setLocationMethod('manual')}
                             >
-                              Select City
+                              {t('settings.preferences.selectCity')}
                             </button>
                             <button
                               className="rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
@@ -432,7 +432,7 @@ export default function Settings() {
                                 setError('')
                               }}
                             >
-                              Cancel
+                              {t('settings.preferences.cancel')}
                             </button>
                           </div>
                         ) : locationMethod === 'gps' ? (
@@ -442,7 +442,7 @@ export default function Settings() {
                               onClick={onChangeLocationGPS}
                               disabled={saving}
                             >
-                              {saving ? 'Getting location...' : 'Get Current Location'}
+                              {saving ? t('settings.preferences.gettingLocation') : t('settings.preferences.getCurrentLocation')}
                             </button>
                             <button
                               className="w-full rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
@@ -452,7 +452,7 @@ export default function Settings() {
                               }}
                               disabled={saving}
                             >
-                              Back
+                              {t('settings.preferences.back')}
                             </button>
                           </div>
                         ) : (
@@ -462,7 +462,7 @@ export default function Settings() {
                               value={selectedCity}
                               onChange={(e) => setSelectedCity(e.target.value)}
                             >
-                              <option value="">Select a city</option>
+                              <option value="">{t('settings.preferences.selectCityPlaceholder')}</option>
                               {CITIES.map(city => (
                                 <option key={city} value={city}>{city}</option>
                               ))}
@@ -473,7 +473,7 @@ export default function Settings() {
                                 onClick={onChangeLocationManual}
                                 disabled={saving || !selectedCity}
                               >
-                                {saving ? 'Saving...' : 'Save'}
+                                {saving ? t('settings.preferences.saving') : t('settings.account.save')}
                               </button>
                               <button
                                 className="rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
@@ -484,7 +484,7 @@ export default function Settings() {
                                 }}
                                 disabled={saving}
                               >
-                                Cancel
+                                {t('settings.preferences.cancel')}
                               </button>
                             </div>
                           </div>
@@ -504,19 +504,19 @@ export default function Settings() {
               <div className="text-xl font-semibold dark:text-white">{t('settings.tabs.notifications')}</div>
               <div className="mt-4 space-y-2">
                 <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
-                  <div className="flex items-center gap-3"><Bell className="h-5 w-5" /><div><div className="font-medium">Push Notifications</div><div className="text-sm text-neutral-600 dark:text-gray-400">Receive important updates</div></div></div>
+                  <div className="flex items-center gap-3"><Bell className="h-5 w-5" /><div><div className="font-medium">{t('settings.notifications.push')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.notifications.pushDesc')}</div></div></div>
                   <div className="flex justify-end"><input type="checkbox" checked={push} onChange={e => saveSetting('push_notifications', e.target.checked)} aria-label="Toggle push notifications" /></div>
                 </div>
                 <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
-                  <div className="flex items-center gap-3"><ShieldAlert className="h-5 w-5" /><div><div className="font-medium">High Risk Alerts</div><div className="text-sm text-neutral-600 dark:text-gray-400">Notify when risk is high</div></div></div>
+                  <div className="flex items-center gap-3"><ShieldAlert className="h-5 w-5" /><div><div className="font-medium">{t('settings.notifications.highRisk')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.notifications.highRiskDesc')}</div></div></div>
                   <div className="flex justify-end"><input type="checkbox" checked={highRisk} onChange={e => saveSetting('high_risk_alerts', e.target.checked)} aria-label="Toggle high risk alerts" /></div>
                 </div>
                 <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
-                  <div className="flex items-center gap-3"><CalendarDays className="h-5 w-5" /><div><div className="font-medium">Daily Forecast</div><div className="text-sm text-neutral-600 dark:text-gray-400">Morning forecast digest</div></div></div>
+                  <div className="flex items-center gap-3"><CalendarDays className="h-5 w-5" /><div><div className="font-medium">{t('settings.notifications.daily')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.notifications.dailyDesc')}</div></div></div>
                   <div className="flex justify-end"><input type="checkbox" checked={daily} onChange={e => saveSetting('daily_forecast', e.target.checked)} aria-label="Toggle daily forecast" /></div>
                 </div>
                 <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
-                  <div className="flex items-center gap-3"><HeartPulse className="h-5 w-5" /><div><div className="font-medium">Health Tips</div><div className="text-sm text-neutral-600 dark:text-gray-400">Periodic tips based on your profile</div></div></div>
+                  <div className="flex items-center gap-3"><HeartPulse className="h-5 w-5" /><div><div className="font-medium">{t('settings.notifications.healthTips')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.notifications.healthTipsDesc')}</div></div></div>
                   <div className="flex justify-end"><input type="checkbox" checked={tips} onChange={e => saveSetting('health_tips', e.target.checked)} aria-label="Toggle health tips" /></div>
                 </div>
               </div>
@@ -529,31 +529,31 @@ export default function Settings() {
             <div className="rounded-2xl p-4 bg-white dark:bg-gray-900 border border-neutral-200 dark:border-gray-700 shadow-sm">
               <div className="text-xl font-semibold dark:text-white">{t('settings.tabs.help')}</div>
               <div className="mt-4 grid grid-cols-2 gap-3">
-                <Link to="/help/faq" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><HelpCircle className="h-5 w-5" /><span>FAQs</span></div><ChevronRight className="h-5 w-5" /></Link>
-                <Link to="/help/contact" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><Phone className="h-5 w-5" /><span>Contact Support</span></div><ChevronRight className="h-5 w-5" /></Link>
-                <Link to="/help/tutorial" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><BookOpen className="h-5 w-5" /><span>Tutorial</span></div><ChevronRight className="h-5 w-5" /></Link>
-                <Link to="/help/privacy" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><FileText className="h-5 w-5" /><span>Privacy Policy</span></div><ChevronRight className="h-5 w-5" /></Link>
-                <Link to="/help/terms" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><Scroll className="h-5 w-5" /><span>Terms of Service</span></div><ChevronRight className="h-5 w-5" /></Link>
+                <Link to="/help/faq" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><HelpCircle className="h-5 w-5" /><span>{t('settings.help.faqs')}</span></div><ChevronRight className="h-5 w-5" /></Link>
+                <Link to="/help/contact" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><Phone className="h-5 w-5" /><span>{t('settings.help.contactSupport')}</span></div><ChevronRight className="h-5 w-5" /></Link>
+                <Link to="/help/tutorial" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><BookOpen className="h-5 w-5" /><span>{t('settings.help.tutorial')}</span></div><ChevronRight className="h-5 w-5" /></Link>
+                <Link to="/help/privacy" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><FileText className="h-5 w-5" /><span>{t('settings.help.privacyPolicy')}</span></div><ChevronRight className="h-5 w-5" /></Link>
+                <Link to="/help/terms" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><Scroll className="h-5 w-5" /><span>{t('settings.help.termsOfService')}</span></div><ChevronRight className="h-5 w-5" /></Link>
               </div>
 
               <div className="mt-6 rounded-xl p-4 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-                <div className="text-lg font-semibold mb-3 dark:text-white">Contact Us</div>
+                <div className="text-lg font-semibold mb-3 dark:text-white">{t('settings.help.contactUs')}</div>
                 {contactSuccess && (
                   <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
-                    <p className="text-green-800 dark:text-green-200 text-sm">Thank you! Your message has been sent. We'll get back to you soon.</p>
+                    <p className="text-green-800 dark:text-green-200 text-sm">{t('settings.help.thankYouMessage')}</p>
                   </div>
                 )}
                 <form className="grid grid-cols-2 gap-4" onSubmit={onSubmitContact}>
                   <input 
                     className="border border-neutral-200 dark:border-gray-700 rounded-2xl px-3 py-2 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500" 
-                    placeholder="Your name" 
+                    placeholder={t('settings.help.contactName')} 
                     value={contactForm.name}
                     onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                     required
                   />
                   <input 
                     className="border border-neutral-200 dark:border-gray-700 rounded-2xl px-3 py-2 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500" 
-                    placeholder="Email" 
+                    placeholder={t('settings.help.contactEmail')} 
                     type="email" 
                     value={contactForm.email}
                     onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
@@ -562,7 +562,7 @@ export default function Settings() {
                   <textarea 
                     className="col-span-2 border border-neutral-200 dark:border-gray-700 rounded-2xl px-3 py-2 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500" 
                     rows="4" 
-                    placeholder="Message" 
+                    placeholder={t('settings.help.contactMessage')} 
                     value={contactForm.message}
                     onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                     required
@@ -573,7 +573,7 @@ export default function Settings() {
                       className="btn-primary rounded-2xl px-4 py-3"
                       disabled={contactSubmitting}
                     >
-                      {contactSubmitting ? 'Sending...' : 'Send'}
+                      {contactSubmitting ? t('settings.help.sending') : t('settings.help.send')}
                     </button>
                   </div>
                 </form>

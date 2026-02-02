@@ -19,7 +19,7 @@ export default function ContactSupport() {
   const onSubmit = async (e) => {
     e.preventDefault()
     if (!form.name || !form.email || !form.message) {
-      setError('Please fill in all required fields')
+      setError(t('contact.fillRequired'))
       return
     }
     setError('')
@@ -46,7 +46,7 @@ export default function ContactSupport() {
       // Clear success message after 5 seconds
       setTimeout(() => setSuccess(false), 5000)
     } catch (err) {
-      setError('Failed to send message. Please try again or email us directly at support@heatsense.ai')
+      setError(t('contact.sendError'))
     } finally {
       setSubmitting(false)
     }
@@ -58,18 +58,18 @@ export default function ContactSupport() {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <Phone className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Contact Support</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('contact.title')}</h1>
           </div>
-          <p className="text-gray-600 dark:text-gray-400">Get in touch with our support team</p>
+          <p className="text-gray-600 dark:text-gray-400">{t('contact.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
             <div className="flex items-center gap-3 mb-3">
               <Mail className="h-6 w-6 text-primary" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Email Us</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('contact.emailUs')}</h3>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 mb-2">Send us an email at:</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-2">{t('contact.sendEmailAt')}</p>
             <a 
               href="mailto:support@heatsense.ai" 
               className="text-primary hover:underline font-medium"
@@ -81,23 +81,23 @@ export default function ContactSupport() {
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
             <div className="flex items-center gap-3 mb-3">
               <Phone className="h-6 w-6 text-primary" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Response Time</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('contact.responseTime')}</h3>
             </div>
             <p className="text-gray-600 dark:text-gray-400">
-              We typically respond within 24-48 hours during business days.
+              {t('contact.responseTimeText')}
             </p>
           </div>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Send us a Message</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">{t('contact.sendMessage')}</h2>
           
           {success && (
             <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl flex items-start gap-3">
               <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-green-800 dark:text-green-200 font-medium">Message sent successfully!</p>
-                <p className="text-green-700 dark:text-green-300 text-sm mt-1">We'll get back to you as soon as possible.</p>
+                <p className="text-green-800 dark:text-green-200 font-medium">{t('contact.successTitle')}</p>
+                <p className="text-green-700 dark:text-green-300 text-sm mt-1">{t('contact.successText')}</p>
               </div>
             </div>
           )}
@@ -112,12 +112,12 @@ export default function ContactSupport() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Your Name *
+                  {t('contact.nameLabel')}
                 </label>
                 <input
                   type="text"
                   className="w-full border border-neutral-200 dark:border-gray-700 rounded-xl px-4 py-3 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-                  placeholder="Your name"
+                  placeholder={t('contact.namePlaceholder')}
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   required
@@ -125,12 +125,12 @@ export default function ContactSupport() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Email Address *
+                  {t('contact.emailLabel')}
                 </label>
                 <input
                   type="email"
                   className="w-full border border-neutral-200 dark:border-gray-700 rounded-xl px-4 py-3 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-                  placeholder="your.email@example.com"
+                  placeholder={t('contact.emailPlaceholder')}
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   required
@@ -139,24 +139,24 @@ export default function ContactSupport() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Subject (Optional)
+                {t('contact.subjectLabel')}
               </label>
               <input
                 type="text"
                 className="w-full border border-neutral-200 dark:border-gray-700 rounded-xl px-4 py-3 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-                placeholder="What is this regarding?"
+                placeholder={t('contact.subjectPlaceholder')}
                 value={form.subject}
                 onChange={(e) => setForm({ ...form, subject: e.target.value })}
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Message *
+                {t('contact.messageLabel')}
               </label>
               <textarea
                 className="w-full border border-neutral-200 dark:border-gray-700 rounded-xl px-4 py-3 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none"
                 rows="6"
-                placeholder="Please describe your issue or question in detail..."
+                placeholder={t('contact.messagePlaceholder')}
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 required
@@ -171,12 +171,12 @@ export default function ContactSupport() {
                 {submitting ? (
                   <>
                     <span className="animate-spin">⏳</span>
-                    <span>Sending...</span>
+                    <span>{t('contact.sending')}</span>
                   </>
                 ) : (
                   <>
                     <Send className="h-5 w-5" />
-                    <span>Send Message</span>
+                    <span>{t('contact.send')}</span>
                   </>
                 )}
               </button>

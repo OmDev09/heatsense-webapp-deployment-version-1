@@ -5,36 +5,12 @@ export default function Tutorial() {
   const { t } = useTranslation()
 
   const steps = [
-    {
-      title: 'Create Your Account',
-      description: 'Sign up with your email and phone number. You can also sign in with Google for faster access.',
-      icon: '1'
-    },
-    {
-      title: 'Complete Your Profile',
-      description: 'Fill in your age, gender, city, occupation, and health conditions. This helps our AI provide personalized risk assessments.',
-      icon: '2'
-    },
-    {
-      title: 'Enable Location Access',
-      description: 'Allow location access for real-time weather updates specific to your area. You can also manually select your city.',
-      icon: '3'
-    },
-    {
-      title: 'View Your Dashboard',
-      description: 'Check your personalized heat risk level, current weather conditions, and health advisories tailored to your profile.',
-      icon: '4'
-    },
-    {
-      title: 'Review Advisories',
-      description: 'Get detailed recommendations on hydration, activity management, clothing, and warning signs to watch for.',
-      icon: '5'
-    },
-    {
-      title: 'Customize Settings',
-      description: 'Adjust notification preferences, language, theme, and other settings to personalize your experience.',
-      icon: '6'
-    }
+    { title: t('tutorial.step1Title'), description: t('tutorial.step1Desc'), icon: '1' },
+    { title: t('tutorial.step2Title'), description: t('tutorial.step2Desc'), icon: '2' },
+    { title: t('tutorial.step3Title'), description: t('tutorial.step3Desc'), icon: '3' },
+    { title: t('tutorial.step4Title'), description: t('tutorial.step4Desc'), icon: '4' },
+    { title: t('tutorial.step5Title'), description: t('tutorial.step5Desc'), icon: '5' },
+    { title: t('tutorial.step6Title'), description: t('tutorial.step6Desc'), icon: '6' }
   ]
 
   return (
@@ -43,9 +19,9 @@ export default function Tutorial() {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <BookOpen className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tutorial</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('tutorial.title')}</h1>
           </div>
-          <p className="text-gray-600 dark:text-gray-400">Learn how to get the most out of HeatSense AI</p>
+          <p className="text-gray-600 dark:text-gray-400">{t('tutorial.subtitle')}</p>
         </div>
 
         <div className="space-y-6">
@@ -71,23 +47,23 @@ export default function Tutorial() {
         </div>
 
         <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Tips for Best Experience</h3>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('tutorial.tipsTitle')}</h3>
           <ul className="space-y-3">
             <li className="flex items-start gap-3">
               <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <span className="text-gray-700 dark:text-gray-300">Keep your profile information up-to-date for accurate risk assessments</span>
+              <span className="text-gray-700 dark:text-gray-300">{t('tutorial.tip1')}</span>
             </li>
             <li className="flex items-start gap-3">
               <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <span className="text-gray-700 dark:text-gray-300">Enable push notifications to receive timely alerts about heat risks</span>
+              <span className="text-gray-700 dark:text-gray-300">{t('tutorial.tip2')}</span>
             </li>
             <li className="flex items-start gap-3">
               <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <span className="text-gray-700 dark:text-gray-300">Check the Safety Guide section to learn about heat-related illnesses</span>
+              <span className="text-gray-700 dark:text-gray-300">{t('tutorial.tip3')}</span>
             </li>
             <li className="flex items-start gap-3">
               <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <span className="text-gray-700 dark:text-gray-300">Review advisories regularly, especially during peak summer months</span>
+              <span className="text-gray-700 dark:text-gray-300">{t('tutorial.tip4')}</span>
             </li>
           </ul>
         </div>

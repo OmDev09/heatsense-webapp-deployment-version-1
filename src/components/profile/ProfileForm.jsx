@@ -291,12 +291,12 @@ export default function ProfileForm() {
 
   if (loadingProfile) {
     return (
-      <div className="min-h-screen bg-app px-8 py-10 flex items-center justify-center aurora-bg relative">
-        <div className="w-full max-w-[600px] mx-auto aurora-content">
-          <div className="card rounded-3xl p-6 bg-white/95 backdrop-blur-sm">
+      <div className="min-h-screen bg-orange-50 dark:bg-gray-900 px-8 py-10 flex items-center justify-center relative">
+        <div className="w-full max-w-[600px] mx-auto">
+          <div className="card rounded-3xl p-6 border border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-800 backdrop-blur-sm">
             <div className="animate-pulse">
-              <div className="h-6 bg-neutral-200 rounded w-48 mx-auto mb-4"></div>
-              <div className="h-32 bg-neutral-200 rounded"></div>
+              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-48 mx-auto mb-4"></div>
+              <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
             </div>
           </div>
         </div>
@@ -305,19 +305,19 @@ export default function ProfileForm() {
   }
 
   return (
-    <div className="min-h-screen bg-app px-8 py-10 flex items-center justify-center aurora-bg relative">
-      <div className="w-full max-w-[600px] mx-auto aurora-content">
-        <div className="card rounded-3xl p-6 bg-white/95 backdrop-blur-sm">
+    <div className="min-h-screen bg-orange-50 dark:bg-gray-900 px-8 py-10 flex items-center justify-center relative">
+      <div className="w-full max-w-[600px] mx-auto">
+        <div className="card rounded-3xl p-6 border border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-800 backdrop-blur-sm">
               <div className="text-center mb-3">
-                <div className="text-2xl font-bold">{isEditMode ? t('settings.account.editProfile') : t('profile.title')}</div>
-                <div className="text-xs text-neutral-600 mt-1.5">{isEditMode ? t('settings.account.editProfileDesc') : 'Your data helps our AI predict your personal heat risk.'}</div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{isEditMode ? t('settings.account.editProfile') : t('profile.title')}</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1.5">{isEditMode ? t('settings.account.editProfileDesc') : 'Your data helps our AI predict your personal heat risk.'}</div>
               </div>
               <form className="mt-5 space-y-4" onSubmit={onSubmit}>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-neutral-700">{t('profile.age')}</label>
+                    <label className="text-xs text-gray-700 dark:text-gray-300">{t('profile.age')}</label>
                     <input
-                      className="mt-1 w-full border rounded-xl px-3 py-2.5 bg-white shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm"
+                      className="mt-1 w-full border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm"
                       type="number"
                       min="1"
                       value={age}
@@ -332,61 +332,61 @@ export default function ProfileForm() {
                         setFieldErrors(prev => ({ ...prev, age: '' }))
                       }}
                     />
-                    <div className="mt-0.5 text-xs text-neutral-500">{t('profile.ageHelp')}</div>
+                    <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{t('profile.ageHelp')}</div>
                     {fieldErrors.age && <div className="mt-0.5 text-xs text-primary">{fieldErrors.age}</div>}
                   </div>
                   <div>
-                    <label className="text-xs text-neutral-700">{t('profile.gender')}</label>
+                    <label className="text-xs text-gray-700 dark:text-gray-300">{t('profile.gender')}</label>
                     <div className="mt-1 relative">
-                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 pointer-events-none z-10" />
-                      <select className="w-full border rounded-xl px-3 pr-9 py-2.5 bg-white shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer text-sm" value={gender} onChange={e => { setGender(e.target.value); setFieldErrors(prev => ({ ...prev, gender: '' })) }}>
+                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none z-10" />
+                      <select className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-3 pr-9 py-2.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer text-sm" value={gender} onChange={e => { setGender(e.target.value); setFieldErrors(prev => ({ ...prev, gender: '' })) }}>
                         <option value="">Select</option>
                         <option>Male</option>
                         <option>Female</option>
                         <option>Other</option>
                       </select>
                     </div>
-                    <div className="mt-0.5 text-xs text-neutral-500">{t('profile.genderHelp')}</div>
+                    <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{t('profile.genderHelp')}</div>
                     {fieldErrors.gender && <div className="mt-0.5 text-xs text-primary">{fieldErrors.gender}</div>}
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="flex items-center gap-1.5 text-xs text-neutral-700"><MapPin className="h-3.5 w-3.5" /> <span>{t('profile.city')}</span></label>
+                    <label className="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300"><MapPin className="h-3.5 w-3.5" /> <span>{t('profile.city')}</span></label>
                     <div className="mt-1 relative">
-                      <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 pointer-events-none z-10" />
-                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 pointer-events-none z-10" />
-                      <select className="w-full border rounded-xl pl-9 pr-9 py-2.5 bg-white shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer text-sm" value={city} onChange={e => { setCity(e.target.value); setFieldErrors(prev => ({ ...prev, city: '' })) }}>
+                      <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none z-10" />
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none z-10" />
+                      <select className="w-full border border-gray-200 dark:border-gray-700 rounded-xl pl-9 pr-9 py-2.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer text-sm" value={city} onChange={e => { setCity(e.target.value); setFieldErrors(prev => ({ ...prev, city: '' })) }}>
                         {CITIES.map(c => (
                           <option key={c} value={c}>{c}</option>
                         ))}
                       </select>
                     </div>
-                    <div className="mt-0.5 text-xs text-neutral-500">{t('profile.cityHelp')}</div>
+                    <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{t('profile.cityHelp')}</div>
                     {fieldErrors.city && <div className="mt-0.5 text-xs text-primary">{fieldErrors.city}</div>}
                   </div>
                   <div>
-                    <label className="flex items-center gap-1.5 text-xs text-neutral-700"><Briefcase className="h-3.5 w-3.5" /> <span>Occupation / Status</span></label>
+                    <label className="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300"><Briefcase className="h-3.5 w-3.5" /> <span>Occupation / Status</span></label>
                     <div className="mt-1 relative">
-                      <Briefcase className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 pointer-events-none z-10" />
-                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 pointer-events-none z-10" />
-                      <select className="w-full border rounded-xl pl-9 pr-9 py-2.5 bg-white shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer text-sm" value={occupation} onChange={e => { setOccupation(e.target.value); setFieldErrors(prev => ({ ...prev, occupation: '' })) }}>
+                      <Briefcase className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none z-10" />
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none z-10" />
+                      <select className="w-full border border-gray-200 dark:border-gray-700 rounded-xl pl-9 pr-9 py-2.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer text-sm" value={occupation} onChange={e => { setOccupation(e.target.value); setFieldErrors(prev => ({ ...prev, occupation: '' })) }}>
                         {OCCUPATIONS.map(occ => (
                           <option key={occ.value} value={occ.value}>{occ.label}</option>
                         ))}
                       </select>
                     </div>
-                    <div className="mt-0.5 text-xs text-neutral-500">{t('profile.occupationHelp')}</div>
+                    <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{t('profile.occupationHelp')}</div>
                     {fieldErrors.occupation && <div className="mt-0.5 text-xs text-primary">{fieldErrors.occupation}</div>}
                   </div>
                 </div>
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs text-neutral-700"><Home className="h-3.5 w-3.5" /> <span>Housing / Roof Type</span></label>
+                  <label className="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300"><Home className="h-3.5 w-3.5" /> <span>Housing / Roof Type</span></label>
                   <div className="mt-1 relative">
-                    <Home className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 pointer-events-none z-10" />
-                    <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 pointer-events-none z-10" />
+                    <Home className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none z-10" />
+                    <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none z-10" />
                     <select 
-                      className="w-full border rounded-xl pl-9 pr-9 py-2.5 bg-white shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer text-sm" 
+                      className="w-full border border-gray-200 dark:border-gray-700 rounded-xl pl-9 pr-9 py-2.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer text-sm" 
                       value={housingType} 
                       onChange={e => { 
                         setHousingType(e.target.value); 
@@ -401,13 +401,13 @@ export default function ProfileForm() {
                       ))}
                     </select>
                   </div>
-                  <div className="mt-0.5 text-xs text-neutral-500">
+                  <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                     We use this to calculate indoor heat risk. Metal roofs can be 3-5°C hotter.
                   </div>
                   {fieldErrors.housingType && <div className="mt-0.5 text-xs text-primary">{fieldErrors.housingType}</div>}
                 </div>
                 <div>
-                  <div className="flex items-center gap-1.5 text-xs text-neutral-700 mb-2"><Heart className="h-3.5 w-3.5 text-primary" /> <span>{t('profile.healthConditions')}</span></div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300 mb-2"><Heart className="h-3.5 w-3.5 text-primary" /> <span>{t('profile.healthConditions')}</span></div>
                   <div className="grid grid-cols-2 gap-2.5">
                     {HEALTH_OPTIONS.map(opt => {
                       const isSelected = opt.value === 'none' ? noneSelected : selectedConditions.includes(opt.value)
@@ -417,11 +417,11 @@ export default function ProfileForm() {
                           onClick={() => onToggleCondition(opt.value, !isSelected)}
                           className={`relative border-2 rounded-xl px-3 py-3 cursor-pointer transition-all ${
                             isSelected
-                              ? 'bg-orange-50 border-orange-500 shadow-sm'
-                              : 'bg-white border-neutral-200 hover:border-neutral-300 hover:shadow-sm'
+                              ? 'bg-orange-50 dark:bg-orange-900/30 border-orange-500 shadow-sm'
+                              : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-sm'
                           }`}
                         >
-                          <span className="font-medium text-xs text-neutral-800 block pr-5">{opt.label}</span>
+                          <span className="font-medium text-xs text-gray-900 dark:text-gray-100 block pr-5">{opt.label}</span>
                           {isSelected && (
                             <div className="absolute top-1.5 right-1.5 h-5 w-5 rounded-full bg-orange-500 flex items-center justify-center">
                               <Check className="h-3 w-3 text-white" />
@@ -435,7 +435,7 @@ export default function ProfileForm() {
                 {!isEditMode && (
                   <div className="mt-1">
                     <label
-                      className="flex items-center gap-2 text-xs cursor-pointer select-none text-neutral-700"
+                      className="flex items-center gap-2 text-xs cursor-pointer select-none text-gray-700 dark:text-gray-300"
                       onClick={() => setShowTermsModal(true)}
                     >
                       <input
@@ -489,7 +489,7 @@ export default function ProfileForm() {
                   <div className="mt-4 flex items-center justify-end gap-3">
                     <button
                       type="button"
-                      className="rounded-2xl px-4 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-700"
+                      className="rounded-2xl px-4 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
                       onClick={() => {
                         setShowTermsModal(false)
                         setTermsAccepted(false)

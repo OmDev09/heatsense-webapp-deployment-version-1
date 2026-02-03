@@ -1,5 +1,5 @@
-
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Mail, Lock, Thermometer, Sun } from 'lucide-react'
 import Button from '../shared/Button.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
@@ -17,29 +17,19 @@ function GoogleIcon() {
 }
 
 export default function Login() {
-  const { login, loginWithGoogle, checkProfileExists, user } = useAuth()
+  const navigate = useNavigate()
+  const { login, loginWithGoogle, checkProfileExists } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [status, setStatus] = useState('Sign In')
 
   useEffect(() => {
     const saved = localStorage.getItem('remember_email')
     if (saved) setEmail(saved)
   }, [])
-
-  useEffect(() => {
-    if (user) {
-      setLoading(true)
-      checkProfileExists(user.id)
-        .then(exists => {
-          if (exists) window.location.assign('/dashboard')
-          else window.location.assign('/profile')
-        })
-        .finally(() => setLoading(false))
-    }
-  }, [user])
 
   const validate = () => {
     const okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -48,7 +38,7 @@ export default function Login() {
     return ''
   }
 
-  const onSubmit = async e => {
+  const handleLogin = async e => {
     e.preventDefault()
     setError('')
     const v = validate()
@@ -57,32 +47,65 @@ export default function Login() {
       return
     }
     setLoading(true)
+    setStatus('Signing in...')
     try {
-      // Clear signup flag if it exists (user is now logging in normally)
       localStorage.removeItem('_signing_up')
-      
-      const { error: err } = await login(email, password)
-      if (err) setError(err.message || 'Failed to sign in')
-      else {
-        if (remember) localStorage.setItem('remember_email', email)
+      const { data, error } = await login(email, password)
+      if (error) {
+        setError(error.message || 'Failed to sign in')
+        setLoading(false)
+        setStatus('Sign In')
+        return
       }
+      const loggedInUser = data?.user
+      if (!loggedInUser) {
+        setError('Login failed')
+        setLoading(false)
+        setStatus('Sign In')
+        return
+      }
+      if (remember) localStorage.setItem('remember_email', email)
+      setStatus('Verifying profile...')
+      await new Promise(r => setTimeout(r, 800))
+      const profileExists = await checkProfileExists(loggedInUser.id)
+      if (profileExists) navigate('/dashboard', { replace: true })
+      else navigate('/profile', { replace: true })
     } catch (ex) {
       setError('Login failed')
+      setLoading(false)
+      setStatus('Sign In')
     } finally {
       setLoading(false)
+      setStatus('Sign In')
     }
   }
 
-  const onGoogle = async () => {
+  const handleGoogleLogin = async () => {
     setError('')
     setLoading(true)
+    setStatus('Signing in...')
     try {
-      const { error: err } = await loginWithGoogle()
-      if (err) setError(err.message || 'Google sign-in failed')
+      const { data, error } = await loginWithGoogle()
+      if (error) {
+        setError(error.message || 'Google sign-in failed')
+        setLoading(false)
+        setStatus('Sign In')
+        return
+      }
+      if (data?.user) {
+        setStatus('Verifying profile...')
+        await new Promise(r => setTimeout(r, 800))
+        const profileExists = await checkProfileExists(data.user.id)
+        if (profileExists) navigate('/dashboard', { replace: true })
+        else navigate('/profile', { replace: true })
+      }
     } catch {
       setError('Google sign-in failed')
+      setLoading(false)
+      setStatus('Sign In')
     } finally {
       setLoading(false)
+      setStatus('Sign In')
     }
   }
 
@@ -100,7 +123,7 @@ export default function Login() {
           <div className="text-2xl font-bold">Welcome Back</div>
           <div className="text-sm text-neutral-600">Sign in to check your heat risk</div>
         </div>
-        <form className="mt-4 space-y-3" onSubmit={onSubmit}>
+        <form className="mt-4 space-y-3" onSubmit={handleLogin}>
           <div className="flex items-center gap-2 border rounded-xl px-3 py-2 bg-white shadow-sm focus-within:ring-2 focus-within:ring-primary">
             <Mail className="h-5 w-5 text-neutral-500" />
             <input className="w-full outline-none text-sm" placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
@@ -118,7 +141,7 @@ export default function Login() {
           </div>
           {error && <div className="text-primary text-xs">{error}</div>}
           <Button type="submit" className="w-full btn-primary px-4 py-2.5 rounded-xl text-sm" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? status : 'Sign In'}
           </Button>
         </form>
         <div className="flex items-center gap-2 my-3">
@@ -126,9 +149,9 @@ export default function Login() {
           <span className="text-xs text-neutral-500">or continue with</span>
           <div className="flex-1 h-px bg-neutral-200" />
         </div>
-        <button className="w-full rounded-xl px-4 py-2.5 bg-white border border-neutral-200 shadow-md flex items-center justify-center gap-2 text-sm" onClick={onGoogle} disabled={loading}>
+        <button className="w-full rounded-xl px-4 py-2.5 bg-white border border-neutral-200 shadow-md flex items-center justify-center gap-2 text-sm" onClick={handleGoogleLogin} disabled={loading}>
           <GoogleIcon />
-          <span>Sign in with Google</span>
+          <span>{loading ? status : 'Sign in with Google'}</span>
         </button>
         <div className="mt-4 text-center text-xs">
           <span className="text-neutral-600">Don't have an account?</span>{' '}

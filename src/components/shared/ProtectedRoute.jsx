@@ -1,16 +1,20 @@
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext.jsx'
 
 export function PublicRoute({ children }) {
+  const location = useLocation()
   const { user, profileExists } = useAuth()
-  // Check if we're in the signup flow - don't redirect if user just signed up
   const isSigningUp = localStorage.getItem('_signing_up') === 'true'
-  
-  if (user && !isSigningUp) {
-    return <Navigate to={profileExists ? '/dashboard' : '/profile'} replace />
+
+  if (!user || isSigningUp) return children
+
+  const isLoginOrSignup = location.pathname === '/login' || location.pathname === '/signup'
+  if (isLoginOrSignup) {
+    if (profileExists) return <Navigate to="/dashboard" replace />
+    return children
   }
-  return children
+  return <Navigate to={profileExists ? '/dashboard' : '/profile'} replace />
 }
 
 export default function ProtectedRoute({ requireProfile = false, redirectIfProfileExists = false, children }) {

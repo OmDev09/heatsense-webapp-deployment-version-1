@@ -20,12 +20,20 @@ export function AuthProvider({ children }) {
       setProfileExists(exists)
       return exists
     }
+    console.log('[checkProfileExists] Querying profiles for user.id:', userId, typeof userId)
     const { data, error } = await supabase
       .from('profiles')
       .select('id')
       .eq('id', userId)
       .maybeSingle()
+    console.log('[checkProfileExists] Raw data:', data)
+    console.log('[checkProfileExists] Raw error:', error ? { message: error.message, code: error.code, details: error.details } : null)
     if (error) {
+      if (error.code === 'PGRST116') {
+        console.warn('[checkProfileExists] PGRST116: No rows returned (profile row may not exist or RLS filtered all rows)')
+      } else if (error.code === '42501') {
+        console.warn('[checkProfileExists] 42501: Permission denied (RLS policy likely blocking SELECT)')
+      }
       setProfileExists(false)
       return false
     }
@@ -42,10 +50,18 @@ export function AuthProvider({ children }) {
         const raw = localStorage.getItem('dev_user')
         const u = raw ? JSON.parse(raw) : null
         setUser(u)
-        if (u) {
-          checkProfileExists(u.id).then(v => setProfileExists(v)).catch(() => setProfileExists(false))
-        }
-        setLoading(false)
+        ;(async () => {
+          if (u) {
+            try {
+              await checkProfileExists(u.id)
+            } catch {
+              setProfileExists(false)
+            }
+          } else {
+            setProfileExists(false)
+          }
+          setLoading(false)
+        })()
         return
       }
       
@@ -66,13 +82,25 @@ export function AuthProvider({ children }) {
         }
       }
       
-      supabase.auth.getUser().then(({ data }) => {
-        setUser(data?.user || null)
-        setLoading(false)
-      }).catch((err) => {
-        console.error('Error getting user:', err)
-        setLoading(false)
-      })
+      supabase.auth.getUser()
+        .then(async ({ data }) => {
+          const u = data?.user || null
+          setUser(u)
+          if (u) {
+            try {
+              await checkProfileExists(u.id)
+            } catch {
+              setProfileExists(false)
+            }
+          } else {
+            setProfileExists(false)
+          }
+          setLoading(false)
+        })
+        .catch((err) => {
+          console.error('Error getting user:', err)
+          setLoading(false)
+        })
       
       authStateChangeResult = supabase.auth.onAuthStateChange((_event, session) => {
         const u = session?.user || null

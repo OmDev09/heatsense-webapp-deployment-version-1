@@ -67,6 +67,7 @@ export default function ProfileForm() {
   const [selectedConditions, setSelectedConditions] = useState([])
   const [noneSelected, setNoneSelected] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState('')
   const [error, setError] = useState('')
   const [fieldErrors, setFieldErrors] = useState({})
   const [termsAccepted, setTermsAccepted] = useState(false)
@@ -171,12 +172,10 @@ export default function ProfileForm() {
     return errs
   }
 
-  const onSubmit = async e => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     setError('')
     setTermsError('')
 
-    // Only require terms acceptance for new profiles
     if (!isEditMode && !termsAccepted) {
       setTermsError(t('profile.validation.terms'))
       return
@@ -189,10 +188,10 @@ export default function ProfileForm() {
     }
     setFieldErrors({})
     if (!user) return
+
     setLoading(true)
+    setSubmitStatus(isEditMode ? 'Updating...' : 'Saving...')
     try {
-      // Map health conditions to array of strings
-      // Convert condition values to readable labels
       const healthConditionLabels = {
         'heart': 'Heart Disease',
         'diabetes': 'Diabetes',
@@ -200,92 +199,48 @@ export default function ProfileForm() {
         'hypertension': 'High Blood Pressure',
         'none': 'None'
       }
-      
-      const healthConditionsArray = noneSelected 
-        ? [] 
+      const healthConditionsArray = noneSelected
+        ? []
         : selectedConditions
             .map(condition => healthConditionLabels[condition] || condition)
-            .filter(Boolean) // Remove any undefined/null values
+            .filter(Boolean)
 
       const formData = {
         age: Number(age),
         gender,
-        home_city: city, // Map 'city' to 'home_city' for new schema
+        home_city: city,
         occupation,
-        housing_type: housingType || null, // Include housing type
-        health_conditions: healthConditionsArray // Array of strings
+        housing_type: housingType || null,
+        health_conditions: healthConditionsArray
       }
-      
-      // Use upsertProfile for both create and update
-      console.log('📝 ProfileForm: Calling upsertProfile...')
+
       const { data, error: profileError } = await upsertProfile(user.id, formData)
-      
-      // Explicit error handling
+
       if (profileError) {
-        console.error('❌ ProfileForm: Save Error:', profileError)
         setError(profileError.message || t('profile.validation.profileFailed'))
-        setLoading(false)
         return
       }
-
-      // Explicit success check
       if (!data) {
-        console.error('❌ ProfileForm: No data returned from upsertProfile')
         setError(t('profile.validation.profileFailed'))
-        setLoading(false)
         return
       }
 
-      console.log('✅ ProfileForm: Profile saved successfully. Data:', data)
-      
-      // Set last_path BEFORE any async operations to prevent AppRoutes from redirecting
+      setSubmitStatus('Finalizing setup...')
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      await checkProfileExists(user.id)
       if (isEditMode) {
         localStorage.setItem('last_path', '/settings')
+        navigate('/settings', { replace: true })
       } else {
         localStorage.setItem('last_path', '/location')
-      }
-      
-      // For new profiles, navigate immediately to location screen
-      if (isEditMode) {
-        console.log('📝 ProfileForm: Edit mode - navigating to settings...')
-        // For edit mode, update profileExists state and navigate to settings
-        // Do async operations first, then navigate
-        try {
-          await getUserSettings(user.id)
-          await checkProfileExists(user.id)
-        } catch (err) {
-          console.warn('⚠️ ProfileForm: Error updating profile state:', err)
-        }
-        console.log('🚀 ProfileForm: Navigating to /settings now...')
-        setLoading(false)
-        // Force navigation - use both methods to ensure it works
-        navigate('/settings', { replace: true })
-        // Fallback: if navigate doesn't work, use window.location after a brief delay
-        setTimeout(() => {
-          if (window.location.pathname === '/profile') {
-            console.warn('⚠️ ProfileForm: navigate() did not work, using window.location')
-            window.location.href = '/settings'
-          }
-        }, 500)
-      } else {
-        console.log('📝 ProfileForm: New profile - navigating to location...')
-        console.log('🚀 ProfileForm: Navigating to /location now...')
-        setLoading(false)
-        // Force navigation - use both methods to ensure it works
         navigate('/location', { replace: true })
-        console.log('✅ ProfileForm: navigate() command executed')
-        // Fallback: if navigate doesn't work, use window.location after a brief delay
-        setTimeout(() => {
-          if (window.location.pathname === '/profile') {
-            console.warn('⚠️ ProfileForm: navigate() did not work, using window.location')
-            window.location.href = '/location'
-          }
-        }, 500)
       }
     } catch (err) {
-      console.error('❌ ProfileForm: Exception in onSubmit:', err)
+      console.error('❌ ProfileForm: Exception in handleSubmit:', err)
       setError(t('profile.validation.saveFailed'))
+    } finally {
       setLoading(false)
+      setSubmitStatus('')
     }
   }
 
@@ -312,7 +267,7 @@ export default function ProfileForm() {
                 <div className="text-2xl font-bold text-gray-900 dark:text-white">{isEditMode ? t('settings.account.editProfile') : t('profile.title')}</div>
                 <div className="text-xs text-gray-600 dark:text-gray-400 mt-1.5">{isEditMode ? t('settings.account.editProfileDesc') : 'Your data helps our AI predict your personal heat risk.'}</div>
               </div>
-              <form className="mt-5 space-y-4" onSubmit={onSubmit}>
+              <form className="mt-5 space-y-4" onSubmit={e => e.preventDefault()}>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs text-gray-700 dark:text-gray-300">{t('profile.age')}</label>
@@ -451,12 +406,13 @@ export default function ProfileForm() {
                 )}
                 {error && <div className="text-primary text-xs">{error}</div>}
                 <Button 
-                  type="submit" 
+                  type="button"
+                  onClick={handleSubmit}
                   className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold px-5 py-3 rounded-xl flex items-center justify-center gap-2 min-h-[48px] shadow-lg shadow-orange-500/30 transition-all transform hover:scale-[1.02]" 
                   disabled={loading} 
                   aria-label="Continue"
                 >
-                  <span className="text-sm">{loading ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update Profile' : t('profile.continue'))}</span>
+                  <span className="text-sm">{loading ? (submitStatus || (isEditMode ? 'Updating...' : 'Saving...')) : (isEditMode ? 'Update Profile' : t('profile.continue'))}</span>
                   {!loading && <ArrowRight className="h-4 w-4" />}
                 </Button>
               </form>

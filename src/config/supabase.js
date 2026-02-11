@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 
-// TODO: Switch back to env variables before production
+// NOTE: Supabase credentials are intentionally hardcoded here.
+// This file does NOT read from import.meta.env or any .env values.
 
 const supabaseUrl = "https://rrlnkyzhxwsnlfemkzvy.supabase.co"
 

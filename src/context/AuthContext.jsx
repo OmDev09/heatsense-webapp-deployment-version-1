@@ -160,7 +160,12 @@ export function AuthProvider({ children }) {
   }
 
   const logout = async () => {
-    try { localStorage.removeItem('last_path') } catch {}
+    setUser(null)
+    setProfileExists(null)
+    try {
+      localStorage.removeItem('last_path')
+      localStorage.removeItem('signup_name')
+    } catch {}
     if (devAuth) {
       const uid = user?.id
       try {
@@ -170,8 +175,6 @@ export function AuthProvider({ children }) {
           localStorage.removeItem(`dev_settings_${uid}`)
         }
       } catch {}
-      setUser(null)
-      setProfileExists(false)
       return { error: null }
     }
     return supabase.auth.signOut()

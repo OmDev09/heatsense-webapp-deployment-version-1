@@ -20,20 +20,12 @@ export function AuthProvider({ children }) {
       setProfileExists(exists)
       return exists
     }
-    console.log('[checkProfileExists] Querying profiles for user.id:', userId, typeof userId)
     const { data, error } = await supabase
       .from('profiles')
       .select('id')
       .eq('id', userId)
       .maybeSingle()
-    console.log('[checkProfileExists] Raw data:', data)
-    console.log('[checkProfileExists] Raw error:', error ? { message: error.message, code: error.code, details: error.details } : null)
     if (error) {
-      if (error.code === 'PGRST116') {
-        console.warn('[checkProfileExists] PGRST116: No rows returned (profile row may not exist or RLS filtered all rows)')
-      } else if (error.code === '42501') {
-        console.warn('[checkProfileExists] 42501: Permission denied (RLS policy likely blocking SELECT)')
-      }
       setProfileExists(false)
       return false
     }
@@ -99,6 +91,8 @@ export function AuthProvider({ children }) {
         })
         .catch((err) => {
           console.error('Error getting user:', err)
+          setUser(null)
+          setProfileExists(false)
           setLoading(false)
         })
       

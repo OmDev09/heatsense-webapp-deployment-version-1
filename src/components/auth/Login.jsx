@@ -1,24 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Mail, Lock, Thermometer, Sun } from 'lucide-react'
+import { Mail, Lock, Thermometer } from 'lucide-react'
 import Button from '../shared/Button.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import LoginSlider from './LoginSlider.jsx'
 
-function GoogleIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="h-4 w-4">
-      <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.6 31.6 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.9 5.1 29.7 3 24 3 12.9 3 4 11.9 4 23s8.9 20 20 20c10.9 0 20-8.9 20-20 0-1.7-.2-3.3-.4-4.5z"/>
-      <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.3 16 18.8 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.9 5.1 29.7 3 24 3 16 3 9.2 7.2 6.3 14.7z"/>
-      <path fill="#4CAF50" d="M24 43c5.2 0 10-2 13.6-5.3l-6.3-5.3C29.3 35 24.9 37 24 37c-5.2 0-9.6-3.5-11.2-8.3l-6.6 5.1C9.1 40.8 16 43 24 43z"/>
-      <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.7 3.6-5.1 6.5-9.3 6.5-5.2 0-9.6-3.5-11.2-8.3l-6.6 5.1C9.1 40.8 16 43 24 43c10.9 0 20-8.9 20-20 0-1.7-.2-3.3-.4-4.5z"/>
-    </svg>
-  )
-}
-
 export default function Login() {
   const navigate = useNavigate()
-  const { login, loginWithGoogle, checkProfileExists } = useAuth()
+  const { login, checkProfileExists } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
@@ -80,35 +69,6 @@ export default function Login() {
     }
   }
 
-  const handleGoogleLogin = async () => {
-    setError('')
-    setLoading(true)
-    setStatus('Signing in...')
-    try {
-      const { data, error } = await loginWithGoogle()
-      if (error) {
-        setError(error.message || 'Google sign-in failed')
-        setLoading(false)
-        setStatus('Sign In')
-        return
-      }
-      if (data?.user) {
-        setStatus('Verifying profile...')
-        await new Promise(r => setTimeout(r, 800))
-        const profileExists = await checkProfileExists(data.user.id)
-        if (profileExists) navigate('/dashboard', { replace: true })
-        else navigate('/profile', { replace: true })
-      }
-    } catch {
-      setError('Google sign-in failed')
-      setLoading(false)
-      setStatus('Sign In')
-    } finally {
-      setLoading(false)
-      setStatus('Sign In')
-    }
-  }
-
   return (
     <div className="h-screen grid grid-cols-[40%_60%] overflow-hidden">
       <div className="h-full">
@@ -144,18 +104,9 @@ export default function Login() {
             {loading ? status : 'Sign In'}
           </Button>
         </form>
-        <div className="flex items-center gap-2 my-3">
-          <div className="flex-1 h-px bg-neutral-200" />
-          <span className="text-xs text-neutral-500">or continue with</span>
-          <div className="flex-1 h-px bg-neutral-200" />
-        </div>
-        <button className="w-full rounded-xl px-4 py-2.5 bg-white border border-neutral-200 shadow-md flex items-center justify-center gap-2 text-sm" onClick={handleGoogleLogin} disabled={loading}>
-          <GoogleIcon />
-          <span>{loading ? status : 'Sign in with Google'}</span>
-        </button>
         <div className="mt-4 text-center text-xs">
           <span className="text-neutral-600">Don't have an account?</span>{' '}
-          <a href="/signup" className="text-primary">Sign Up</a>
+          <a href="/signup" className="text-primary hover:underline">Sign Up</a>
         </div>
       </div>
       </div>

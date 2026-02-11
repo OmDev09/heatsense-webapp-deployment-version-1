@@ -46,6 +46,13 @@ const HEALTH_OPTIONS = [
   { label: 'None', value: 'none' }
 ]
 
+function isOccupationDisabledForUser(occ, age, gender) {
+  if (occ.value === 'pregnant') return gender !== 'Female'
+  if (occ.value === 'student') return age !== '' && Number(age) >= 18
+  if (occ.value === 'senior') return age !== '' && Number(age) < 50
+  return false
+}
+
 export default function ProfileForm() {
   const { t } = useTranslation()
   const auth = useAuth()
@@ -148,6 +155,15 @@ export default function ProfileForm() {
     }
   }, [isEditMode, user])
 
+  // Auto-reset occupation when it becomes invalid due to age/gender changes
+  useEffect(() => {
+    const currentOcc = OCCUPATIONS.find(o => o.value === occupation)
+    if (!currentOcc) return
+    if (isOccupationDisabledForUser(currentOcc, age, gender)) {
+      setOccupation(age !== '' && Number(age) < 18 ? 'student' : 'outdoor')
+    }
+  }, [age, gender, occupation])
+
   if (!auth || auth.loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading Profile...</div>
   }
@@ -169,6 +185,10 @@ export default function ProfileForm() {
     if (!gender) errs.gender = t('profile.validation.gender')
     if (!city) errs.city = t('profile.validation.city')
     if (!occupation) errs.occupation = t('profile.validation.occupation')
+    const currentOcc = OCCUPATIONS.find(o => o.value === occupation)
+    if (currentOcc && isOccupationDisabledForUser(currentOcc, age, gender)) {
+      errs.occupation = 'Please select an occupation that matches your age and gender.'
+    }
     return errs
   }
 
@@ -324,9 +344,15 @@ export default function ProfileForm() {
                       <Briefcase className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none z-10" />
                       <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none z-10" />
                       <select className="w-full border border-gray-200 dark:border-gray-700 rounded-xl pl-9 pr-9 py-2.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer text-sm" value={occupation} onChange={e => { setOccupation(e.target.value); setFieldErrors(prev => ({ ...prev, occupation: '' })) }}>
-                        {OCCUPATIONS.map(occ => (
-                          <option key={occ.value} value={occ.value}>{occ.label}</option>
-                        ))}
+                        {OCCUPATIONS.map(occ => {
+                          const disabled = isOccupationDisabledForUser(occ, age, gender)
+                          const tooltip = disabled && occ.value === 'pregnant' ? 'Select Female gender for this option' : disabled && occ.value === 'student' ? 'Select age under 18 for this option' : disabled && occ.value === 'senior' ? 'Select age 50 or above for this option' : ''
+                          return (
+                            <option key={occ.value} value={occ.value} disabled={disabled} title={tooltip}>
+                              {occ.label}
+                            </option>
+                          )
+                        })}
                       </select>
                     </div>
                     <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{t('profile.occupationHelp')}</div>

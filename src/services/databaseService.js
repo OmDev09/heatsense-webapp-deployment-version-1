@@ -38,8 +38,6 @@ export async function getUserProfile(userId) {
  * @returns {Promise<{data: Object|null, error: Error|null}>}
  */
 export async function upsertProfile(userId, formData) {
-  console.log("🚀 Attempting to save profile for User:", userId)
-  
   // Check if userId is a dev user ID (starts with "dev-")
   // Dev user IDs are not valid UUIDs and cannot be saved to Supabase
   const isDevUserId = userId && userId.startsWith('dev-')
@@ -57,32 +55,20 @@ export async function upsertProfile(userId, formData) {
     }
   }
   
-  console.log("📋 FormData received:", JSON.stringify(formData, null, 2))
-  
   // Retrieve signup data from localStorage (only if not already in formData)
   const storedPhone = localStorage.getItem('signup_phone')
   const storedName = localStorage.getItem('signup_name')
   
-  console.log("📋 Raw localStorage values:", { 
-    storedPhone, 
-    storedName,
-    allKeys: Object.keys(localStorage).filter(k => k.startsWith('signup_'))
-  })
-  
   const phone = formData?.phone || storedPhone || null
   const fullName = formData?.full_name || storedName || null
   
-  console.log("📋 Final values being used - phone:", phone, "name:", fullName)
-
   // Get existing profile to merge with (only update provided fields)
   let existingProfile = null
   if (!devMode) {
     try {
       const { data } = await getUserProfile(userId)
       existingProfile = data
-      console.log("📋 Existing profile found:", JSON.stringify(existingProfile, null, 2))
-    } catch (err) {
-      console.log("📋 No existing profile found (this is a new profile)")
+    } catch {
     }
   }
 
@@ -104,8 +90,6 @@ export async function upsertProfile(userId, formData) {
       : (existingProfile?.health_conditions || [])
   }
 
-  console.log("📦 Final payload (merged with existing):", JSON.stringify(payload, null, 2))
-
   if (devMode) {
     console.warn("⚠️ Saving to LocalStorage (Not Supabase) because keys are missing.")
     localStorage.setItem(`dev_profile_${userId}`, JSON.stringify(payload))
@@ -113,9 +97,6 @@ export async function upsertProfile(userId, formData) {
   }
 
   try {
-    console.log("📤 Sending profile to Supabase...")
-    console.log("📦 Final payload being sent:", JSON.stringify(payload, null, 2))
-    
     // Use upsert to insert or update - send all fields including nulls
     // Supabase will handle null values according to column defaults
     const { data, error } = await supabase
@@ -125,17 +106,12 @@ export async function upsertProfile(userId, formData) {
       .single()
     
     if (error) {
-      console.error("❌ Supabase Insert Failed:", error.message, error.details)
-      console.error("❌ Error code:", error.code)
-      console.error("❌ Full error:", JSON.stringify(error, null, 2))
+      console.error("Supabase profile upsert failed:", error.message)
       return { data: null, error }
     }
-    console.log("✅ Profile saved successfully to Supabase")
-    console.log("✅ Returned data:", JSON.stringify(data, null, 2))
     return { data, error: null }
   } catch (error) {
-    console.error("❌ Supabase Insert Failed (Exception):", error.message, error.details || error)
-    console.error("❌ Full exception:", JSON.stringify(error, null, 2))
+    console.error("Profile save exception:", error.message)
     return { data: null, error }
   }
 }
@@ -150,11 +126,7 @@ export async function upsertProfile(userId, formData) {
  * @returns {Promise<{data: Object|null, error: Error|null}>}
  */
 export async function logUserLocation(userId, lat, lon, riskScore = null, riskLabel = null) {
-  console.log("📍 Attempting to log user location for User:", userId)
-  
-  // Guard clause: Prevent logging if risk score is null or undefined
   if (riskScore === null || riskScore === undefined) {
-    console.warn("⚠️ Skipping location log: Risk Score is null or undefined")
     return { data: null, error: null }
   }
   
@@ -166,16 +138,11 @@ export async function logUserLocation(userId, lat, lon, riskScore = null, riskLa
     risk_label: riskLabel
   }
 
-  console.log("📍 Location payload:", JSON.stringify(payload, null, 2))
-
   if (devMode) {
-    // In dev mode, just log to console
-    console.log('📍 Location logged (dev mode):', payload)
     return { data: payload, error: null }
   }
 
   try {
-    console.log("📍 Sending location to Supabase employee_risk_logs...")
     const { data, error } = await supabase
       .from('employee_risk_logs')
       .insert([payload])
@@ -183,17 +150,12 @@ export async function logUserLocation(userId, lat, lon, riskScore = null, riskLa
       .single()
     
     if (error) {
-      console.error('❌ Error logging user location:', error.message, error.details)
-      console.error('❌ Error code:', error.code)
-      console.error('❌ Full error:', JSON.stringify(error, null, 2))
+      console.error('Location log failed:', error.message)
       return { data: null, error }
     }
-    console.log("✅ Location logged successfully to Supabase")
-    console.log("✅ Returned data:", JSON.stringify(data, null, 2))
     return { data, error: null }
   } catch (error) {
-    console.error('❌ Exception logging user location:', error.message, error)
-    console.error('❌ Full exception:', JSON.stringify(error, null, 2))
+    console.error('Location log exception:', error.message)
     return { data: null, error }
   }
 }

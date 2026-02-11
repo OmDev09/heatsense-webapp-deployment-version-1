@@ -863,7 +863,10 @@ export default function Dashboard() {
             <h3 className="font-bold text-xl mb-4 text-gray-900 dark:text-white">{t('dashboard.fiveDayForecast')}</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
               {forecastDays.map((day, i) => (
-                <div key={i} className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                <div
+                  key={i}
+                  className="bg-white/95 dark:bg-gray-900/70 border border-gray-100 dark:border-gray-700 p-4 rounded-xl shadow-lg shadow-gray-200/60 dark:shadow-black/30 backdrop-blur-sm"
+                >
                   <p className="font-semibold text-gray-900 dark:text-white">{day.day}</p>
                   {day.icon ? (
                     <img 
@@ -876,7 +879,7 @@ export default function Dashboard() {
                   ) : day.temp > 35 ? (
                     <Sun className="h-10 w-10 text-yellow-500 mx-auto my-1 fill-yellow-500" />
                   ) : (
-                    <Cloud className="h-10 w-10 text-gray-400 mx-auto my-1" />
+                    <Cloud className="h-10 w-10 text-gray-500 dark:text-gray-300 mx-auto my-1" />
                   )}
                   {day.condition && (
                     <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{day.condition}</p>
@@ -888,7 +891,7 @@ export default function Dashboard() {
           </div>
 
           {/* Heat Affected Regions */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md w-full max-w-full md:max-w-[880px] lg:max-w-[1200px] self-center mx-auto">
             <h3 className="font-bold text-xl mb-4 text-gray-900 dark:text-white">{t('dashboard.heatAffectedRegions')}</h3>
             <div className="aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
               <HeatMap cityData={heatMapCities} loading={heatMapLoading} />

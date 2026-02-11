@@ -7,7 +7,7 @@ import LoginSlider from './LoginSlider.jsx'
 
 export default function Signup() {
   const navigate = useNavigate()
-  const { signup, loginWithGoogle } = useAuth()
+  const { signup } = useAuth()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -19,7 +19,6 @@ export default function Signup() {
     const savedName = localStorage.getItem('signup_name')
     if (savedName) setName(savedName)
   }, [])
-
 
   const validate = () => {
     if (!name.trim()) return 'Full name is required'
@@ -39,9 +38,7 @@ export default function Signup() {
     }
     setLoading(true)
     try {
-      // Set flag to prevent PublicRoute from redirecting during signup
       localStorage.setItem('_signing_up', 'true')
-      
       const { error: err } = await signup(email, password)
       if (err) {
         localStorage.removeItem('_signing_up')
@@ -53,19 +50,6 @@ export default function Signup() {
     } catch {
       localStorage.removeItem('_signing_up')
       setError('Signup failed')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const onGoogle = async () => {
-    setError('')
-    setLoading(true)
-    try {
-      const { error: err } = await loginWithGoogle()
-      if (err) setError(err.message || 'Google sign-up failed')
-    } catch {
-      setError('Google sign-up failed')
     } finally {
       setLoading(false)
     }
@@ -117,18 +101,9 @@ export default function Signup() {
             {loading ? 'Creating account...' : 'Create Account'}
           </Button>
         </form>
-        <div className="flex items-center gap-2 my-3">
-          <div className="flex-1 h-px bg-neutral-200" />
-          <span className="text-xs text-neutral-500">or sign up with</span>
-          <div className="flex-1 h-px bg-neutral-200" />
-        </div>
-        <button className="w-full rounded-xl px-4 py-2.5 bg-white border border-neutral-200 shadow-md flex items-center justify-center gap-2 text-sm" onClick={onGoogle} disabled={loading}>
-          <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 10.2v3.6h5.1c-.2 1.2-1.5 3.5-5.1 3.5-3.1 0-5.6-2.6-5.6-5.8s2.5-5.8 5.6-5.8c1.8 0 3 .7 3.7 1.3l2.5-2.4C16.8 3.6 14.6 2.7 12 2.7 6.9 2.7 2.7 6.9 2.7 12s4.2 9.3 9.3 9.3c5.4 0 9-3.8 9-9.2 0-.6-.1-1-.1-1.5H12z"/><path fill="#34A853" d="M3.3 7.9l3 2.2c.8-2.3 3-3.9 5.7-3.9 1.8 0 3 .7 3.7 1.3l2.5-2.4C16.8 3.6 14.6 2.7 12 2.7c-3.8 0-7 2.2-8.7 5.2z"/><path fill="#4285F4" d="M21 12.5c0-.6-.1-1-.1-1.5H12v3.6h5.1c-.2 1.2-1.5 3.5-5.1 3.5-1.8 0-3.3-.8-4.3-2l-3 2.3c1.8 3 5 4.9 8.6 4.9 5.4 0 9-3.8 9-9.2z"/><path fill="#FBBC05" d="M7.7 13.1c-.2-.6-.4-1.3-.4-2s.1-1.4.4-2L4.7 6.9c-.9 1.4-1.4 3-1.4 4.9s.5 3.5 1.4 4.9l3-2.4z"/></svg>
-          <span>Sign up with Google</span>
-        </button>
         <div className="mt-4 text-center text-xs">
           <span className="text-neutral-600">Already have an account?</span>{' '}
-          <a href="/login" className="text-primary">Sign In</a>
+          <a href="/login" className="text-primary hover:underline">Sign In</a>
         </div>
       </div>
       </div>

@@ -9,6 +9,17 @@ export function PublicRoute({ children }) {
 
   if (!user || isSigningUp) return children
 
+  if (profileExists === null) {
+    return (
+      <div className="fixed inset-0 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm flex items-center justify-center" aria-busy="true">
+        <div className="card rounded-3xl p-6" role="status" aria-label="Checking profile">
+          <div className="animate-pulse h-6 bg-neutral-200 rounded w-48" />
+          <div className="mt-4 animate-pulse h-32 bg-neutral-200 rounded" />
+        </div>
+      </div>
+    )
+  }
+
   const isLoginOrSignup = location.pathname === '/login' || location.pathname === '/signup'
   if (isLoginOrSignup) {
     if (profileExists) return <Navigate to="/dashboard" replace />
@@ -30,7 +41,7 @@ export default function ProtectedRoute({ requireProfile = false, redirectIfProfi
     }
   }, [user, loading, requireProfile, profileExists, checking, checkProfileExists])
 
-  if (loading || checking) {
+  if (loading || checking || (user && profileExists === null)) {
     return (
       <div className="fixed inset-0 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm flex items-center justify-center" aria-busy="true">
         <div className="card rounded-3xl p-6" role="status" aria-label="Checking authentication">

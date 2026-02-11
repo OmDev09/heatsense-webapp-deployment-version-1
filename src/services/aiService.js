@@ -1,5 +1,4 @@
-// Hardcoded API key for development
-const groqApiKey = import.meta.env.VITE_GROQ_API_KEY || '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'
+const groqApiKey = import.meta.env.VITE_GROQ_API_KEY
 let groq = null
 
 // Lazy initialization function

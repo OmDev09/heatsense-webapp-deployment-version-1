@@ -8,13 +8,8 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const [profileExists, setProfileExists] = useState(false)
   
-  // TEMPORARY: Using hardcoded keys (matching supabase.js and databaseService.js)
-  // TODO: Replace with environment variables after debugging
-  const supabaseUrl = "https://rrlnkyzhxwsnlfemkzvy.supabase.co"
-  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJybG5reXpoeHdzbmxmZW1renZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxOTU1MDIsImV4cCI6MjA4MDc3MTUwMn0._XgghTRQAgRfxYjB3JAr2TWg2iHSzrsWC7qt8BkltYs"
-  
-  // Original environment variable approach (commented out for debugging):
-  // const devAuth = !import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
   const devAuth = !supabaseUrl || !supabaseKey
 
   // Define checkProfileExists with useCallback to make it stable

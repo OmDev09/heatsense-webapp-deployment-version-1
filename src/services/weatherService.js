@@ -116,7 +116,7 @@ function mapLanguageToOWM(language) {
  * @returns {Promise<{data: Object|null, error: Error|null}>}
  */
 export async function getDashboardWeather({ lat, lon, city, language = 'en' }) {
-  const key = import.meta.env.VITE_OPENWEATHER_API_KEY || '8e844ea9ec457f226e885eff9eb4919f'
+  const key = import.meta.env.VITE_OPENWEATHER_API_KEY
   
   if (!key) {
     return {

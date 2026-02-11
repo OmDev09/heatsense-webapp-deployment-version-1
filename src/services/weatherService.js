@@ -307,11 +307,12 @@ export async function getDashboardWeather({ lat, lon, city, language = 'en' }) {
       }
     }
 
-    // Prepare processed data
+    // Prepare processed data (include location name from API for live GPS display)
     const processedData = {
       current,
       graph_data,
-      daily_forecast: daily_forecast.slice(0, 5) // Ensure max 5 days
+      daily_forecast: daily_forecast.slice(0, 5),
+      location: { name: currentData?.name || city || 'Unknown Location' }
     }
 
     // Save to sessionStorage cache

@@ -50,6 +50,11 @@ export default function Dashboard() {
   // Use correct schema field names: home_city and full_name
   const city = useMemo(() => profile?.home_city || 'Delhi', [profile])
   const name = useMemo(() => profile?.full_name || 'User', [profile])
+  // Prioritize live GPS/weather location so header shows actual place (e.g. Kalyan), not profile city (e.g. Delhi)
+  const displayCity = useMemo(
+    () => weatherData?.location?.name || profile?.home_city || 'Unknown Location',
+    [weatherData?.location?.name, profile?.home_city]
+  )
 
   const didYouKnowSlides = [
     { image: slide1},
@@ -557,7 +562,7 @@ export default function Dashboard() {
               <div className="flex items-center gap-3 flex-wrap">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('dashboard.greeting', { name })}</h1>
               </div>
-              <p className="text-gray-600 dark:text-gray-400 mt-1">{city} • {today}</p>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">{displayCity} • {today}</p>
             </div>
 
             {/* Temperature Card */}

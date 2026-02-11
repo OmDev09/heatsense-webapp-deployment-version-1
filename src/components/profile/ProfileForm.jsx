@@ -4,7 +4,7 @@ import Button from '../shared/Button.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { upsertProfile, getUserProfile, getUserSettings } from '../../services/databaseService.js'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 const CITIES = ['Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad', 'Pune', 'Ahmedabad']
 // Occupation options with vulnerable groups
@@ -49,16 +49,9 @@ const HEALTH_OPTIONS = [
 export default function ProfileForm() {
   const { t } = useTranslation()
   const auth = useAuth()
-  
-  // CRITICAL FIX: Prevent crash if auth is still initializing
-  if (!auth || auth.loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading Profile...</div>
-  }
-
-  const { user, checkProfileExists } = auth
-  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const isEditMode = searchParams.get('edit') === 'true'
+
   const [age, setAge] = useState('')
   const [gender, setGender] = useState('')
   const [city, setCity] = useState('Delhi')
@@ -76,6 +69,9 @@ export default function ProfileForm() {
   const [loadingProfile, setLoadingProfile] = useState(isEditMode)
 
   const name = useMemo(() => localStorage.getItem('signup_name') || '', [])
+
+  const user = auth?.user
+  const checkProfileExists = auth?.checkProfileExists
 
   useEffect(() => {
     if (!user) {
@@ -151,6 +147,10 @@ export default function ProfileForm() {
       setLoadingProfile(false)
     }
   }, [isEditMode, user])
+
+  if (!auth || auth.loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading Profile...</div>
+  }
 
   const onToggleCondition = (value, checked) => {
     if (value === 'none') {
@@ -229,11 +229,9 @@ export default function ProfileForm() {
       await new Promise(resolve => setTimeout(resolve, 1000))
       await checkProfileExists(user.id)
       if (isEditMode) {
-        localStorage.setItem('last_path', '/settings')
-        navigate('/settings', { replace: true })
+        window.location.href = '/settings'
       } else {
-        localStorage.setItem('last_path', '/location')
-        navigate('/location', { replace: true })
+        window.location.href = '/location'
       }
     } catch (err) {
       console.error('❌ ProfileForm: Exception in handleSubmit:', err)
@@ -267,7 +265,7 @@ export default function ProfileForm() {
                 <div className="text-2xl font-bold text-gray-900 dark:text-white">{isEditMode ? t('settings.account.editProfile') : t('profile.title')}</div>
                 <div className="text-xs text-gray-600 dark:text-gray-400 mt-1.5">{isEditMode ? t('settings.account.editProfileDesc') : 'Your data helps our AI predict your personal heat risk.'}</div>
               </div>
-              <form className="mt-5 space-y-4" onSubmit={e => e.preventDefault()}>
+              <div className="mt-5 space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs text-gray-700 dark:text-gray-300">{t('profile.age')}</label>
@@ -415,7 +413,7 @@ export default function ProfileForm() {
                   <span className="text-sm">{loading ? (submitStatus || (isEditMode ? 'Updating...' : 'Saving...')) : (isEditMode ? 'Update Profile' : t('profile.continue'))}</span>
                   {!loading && <ArrowRight className="h-4 w-4" />}
                 </Button>
-              </form>
+              </div>
         </div>
         {showTermsModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md">

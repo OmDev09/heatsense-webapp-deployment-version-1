@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Shield, User, Mail, Lock } from 'lucide-react'
 import Button from '../shared/Button.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import LoginSlider from './LoginSlider.jsx'
 
 export default function Signup() {
-  const { signup, loginWithGoogle, logout } = useAuth()
+  const navigate = useNavigate()
+  const { signup, loginWithGoogle } = useAuth()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -45,30 +47,8 @@ export default function Signup() {
         localStorage.removeItem('_signing_up')
         setError(err.message || 'Failed to create account')
       } else {
-        // Save signup data to localStorage for profile creation (will be used after login)
-        console.log("💾 Saving signup data to localStorage:", { name })
         localStorage.setItem('signup_name', name)
-        console.log("💾 Saved name:", name)
-        
-        // Supabase automatically logs in the user after signup
-        // We need to log them out so they can go to the login screen
-        console.log("✅ Signup successful, logging out to redirect to login...")
-        try {
-          await logout()
-          console.log("✅ Logged out successfully")
-        } catch (logoutError) {
-          console.warn("⚠️ Logout error (continuing anyway):", logoutError)
-        }
-        
-        // Clear the signup flag and navigate to login
-        localStorage.removeItem('_signing_up')
-        
-        // Use a small delay to ensure logout completes and state updates
-        // Then navigate to login screen
-        setTimeout(() => {
-          console.log("🚀 Redirecting to login...")
-          window.location.href = '/login'
-        }, 200)
+        navigate('/profile', { replace: true })
       }
     } catch {
       localStorage.removeItem('_signing_up')

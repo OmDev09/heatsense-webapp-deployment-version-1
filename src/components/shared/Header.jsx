@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Sun, Bell, Search } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
@@ -7,8 +6,18 @@ import { useTranslation } from 'react-i18next'
 export default function Header() {
   const { t } = useTranslation()
   const auth = useAuth()
-  
-  // CRITICAL FIX: Prevent crash if auth is still initializing
+  const location = useLocation()
+
+  const user = auth?.user
+  const logout = auth?.logout
+  const initial = (user?.email?.[0] || 'U').toUpperCase()
+  const onLogout = async () => {
+    try {
+      await logout?.()
+    } catch {}
+    window.location.assign('/login')
+  }
+
   if (!auth || auth.loading) {
     return (
       <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-6 py-4 bg-white dark:bg-gray-900">
@@ -21,11 +30,6 @@ export default function Header() {
       </header>
     )
   }
-  
-  const { user, logout } = auth
-  const location = useLocation()
-  const initial = (user?.email?.[0] || 'U').toUpperCase()
-  const onLogout = async () => { try { await logout() } catch {} window.location.assign('/login') }
 
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-6 py-4 bg-white dark:bg-gray-900">

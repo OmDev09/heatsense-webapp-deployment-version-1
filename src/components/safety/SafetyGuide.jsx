@@ -68,33 +68,29 @@ export default function SafetyGuide() {
       id: 'exhaustion',
       title: t('safetyGuide.heatExhaustion.title'),
       symptoms: t('safetyGuide.heatExhaustion.symptoms'),
-      whatToDo: t('safetyGuide.heatExhaustion.whatToDo'),
-      expanded: true
+      whatToDo: t('safetyGuide.heatExhaustion.whatToDo')
     },
     {
       id: 'cramps',
       title: t('safetyGuide.heatCramps.title'),
       symptoms: t('safetyGuide.heatCramps.symptoms'),
-      whatToDo: t('safetyGuide.heatCramps.whatToDo'),
-      expanded: false
+      whatToDo: t('safetyGuide.heatCramps.whatToDo')
     },
     {
       id: 'sunburn',
       title: t('safetyGuide.sunburn.title'),
       symptoms: t('safetyGuide.sunburn.symptoms'),
-      whatToDo: t('safetyGuide.sunburn.whatToDo'),
-      expanded: false
+      whatToDo: t('safetyGuide.sunburn.whatToDo')
     },
     {
       id: 'rash',
       title: t('safetyGuide.heatRash.title'),
       symptoms: t('safetyGuide.heatRash.symptoms'),
-      whatToDo: t('safetyGuide.heatRash.whatToDo'),
-      expanded: false
+      whatToDo: t('safetyGuide.heatRash.whatToDo')
     }
   ], [t])
   const [expandedItems, setExpandedItems] = useState({
-    exhaustion: true,
+    exhaustion: false,
     cramps: false,
     sunburn: false,
     rash: false
@@ -102,10 +98,16 @@ export default function SafetyGuide() {
   const [searchQuery, setSearchQuery] = useState('')
 
   const toggleItem = (id) => {
-    setExpandedItems(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }))
+    setExpandedItems(prev => {
+      const isCurrentlyOpen = prev[id]
+      return {
+        exhaustion: false,
+        cramps: false,
+        sunburn: false,
+        rash: false,
+        [id]: !isCurrentlyOpen
+      }
+    })
   }
 
   // Get user's location on component mount

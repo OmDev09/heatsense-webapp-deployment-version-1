@@ -1,16 +1,20 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext.jsx'
-import { getUserProfile, getUserSettings, updateUserSettings, upsertProfile, deleteUserAccount } from '../../services/databaseService.js'
-import { Mail, User, Lock, ChevronRight, Moon, Globe, MapPin, Bell, ShieldAlert, CalendarDays, HeartPulse, HelpCircle, Phone, BookOpen, FileText, Scroll, LogOut } from 'lucide-react'
+import { getUserProfile, getUserSettings, updateUserSettings, upsertProfile } from '../../services/databaseService.js'
+import { Mail, User, Lock, ChevronRight, Moon, Globe, MapPin, HelpCircle, Phone, BookOpen, FileText, Scroll, LogOut } from 'lucide-react'
 import { supabase } from '../../config/supabase.js'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 const CITIES = ['Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad', 'Pune', 'Ahmedabad']
+
+const VALID_TABS = ['account', 'preferences', 'help']
 
 export default function Settings() {
   const { t, i18n } = useTranslation()
   const { user, logout } = useAuth()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const tabFromUrl = searchParams.get('tab')
   const [profile, setProfile] = useState(null)
   const [settings, setSettings] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -18,10 +22,21 @@ export default function Settings() {
   const [changingPassword, setChangingPassword] = useState(false)
   const [newPassword, setNewPassword] = useState('')
   const [saving, setSaving] = useState(false)
-  const [active, setActive] = useState('account')
+  const [active, setActiveState] = useState(() => VALID_TABS.includes(tabFromUrl) ? tabFromUrl : 'account')
+  const setActive = (tab) => {
+    setActiveState(tab)
+    setSearchParams({ tab }, { replace: true })
+  }
+
+  useEffect(() => {
+    const tab = searchParams.get('tab')
+    if (VALID_TABS.includes(tab)) setActiveState(tab)
+  }, [searchParams])
   const [changingLocation, setChangingLocation] = useState(false)
   const [locationMethod, setLocationMethod] = useState(null) // 'gps' or 'manual'
   const [selectedCity, setSelectedCity] = useState('')
+  const [liveLocation, setLiveLocation] = useState(null)
+  const [locationLoading, setLocationLoading] = useState(false)
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
   const [contactSubmitting, setContactSubmitting] = useState(false)
   const [contactSuccess, setContactSuccess] = useState(false)
@@ -66,11 +81,6 @@ export default function Settings() {
     }
   }
   
-  const push = useMemo(() => !!settings?.push_notifications, [settings])
-  const highRisk = useMemo(() => !!settings?.high_risk_alerts, [settings])
-  const daily = useMemo(() => !!settings?.daily_forecast, [settings])
-  const tips = useMemo(() => !!settings?.health_tips, [settings])
-
   useEffect(() => {
     if (!user) {
       window.location.assign('/login')
@@ -112,6 +122,34 @@ export default function Settings() {
     return () => { mounted = false }
   }, [user])
 
+  // Fetch live location via GPS when Preferences is active and we need a fallback
+  useEffect(() => {
+    if (active !== 'preferences' || !user) return
+    const storedCity = profile?.home_city || profile?.city
+    if (storedCity) {
+      setLiveLocation(null)
+      return
+    }
+    if (!navigator.geolocation) return
+    let cancelled = false
+    setLocationLoading(true)
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        if (cancelled) return
+        try {
+          const city = await reverseGeocodeCity(pos.coords.latitude, pos.coords.longitude)
+          if (!cancelled) setLiveLocation(city)
+        } catch {
+          if (!cancelled) setLiveLocation(null)
+        } finally {
+          if (!cancelled) setLocationLoading(false)
+        }
+      },
+      () => { if (!cancelled) { setLocationLoading(false); setLiveLocation(null) } },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
+    )
+    return () => { cancelled = true }
+  }, [active, user, profile?.home_city, profile?.city])
 
   useEffect(() => {
     if (!user) return
@@ -170,16 +208,6 @@ export default function Settings() {
   const onLogout = async () => {
     await logout()
     window.location.assign('/login')
-  }
-
-  const onDeleteAccount = async () => {
-    const ok = window.confirm(t('settings.errors.deleteConfirm'))
-    if (!ok) return
-    setSaving(true)
-    await deleteUserAccount(user.id)
-    await logout()
-    setSaving(false)
-    window.location.assign('/')
   }
 
   const onChangePassword = async () => {
@@ -262,7 +290,7 @@ export default function Settings() {
       const payload = devMode ? { location_permission: true, lat: latitude, lon: longitude } : { location_permission: true }
       await updateUserSettings(user.id, payload)
       
-      // Reload profile to show updated city
+      setLiveLocation(city)
       const { data } = await getUserProfile(user.id)
       setProfile(data || null)
       
@@ -284,7 +312,7 @@ export default function Settings() {
     setSaving(true)
     try {
       await upsertProfile(user.id, { home_city: selectedCity })
-      // Reload profile to show updated city
+      setLiveLocation(selectedCity)
       const { data } = await getUserProfile(user.id)
       setProfile(data || null)
       setChangingLocation(false)
@@ -340,7 +368,6 @@ export default function Settings() {
           <nav className="rounded-2xl p-2 bg-white dark:bg-gray-900 border border-neutral-200 dark:border-gray-700 shadow-sm">
             <button className={`w-full flex items-center gap-3 rounded-xl px-3 py-3 ${active==='account'?'bg-neutral-100 dark:bg-gray-800':'hover:bg-neutral-50 dark:hover:bg-gray-800'}`} onClick={() => setActive('account')}><User className="h-5 w-5" /><span>{t('settings.tabs.account')}</span></button>
             <button className={`w-full flex items-center gap-3 rounded-xl px-3 py-3 ${active==='preferences'?'bg-neutral-100 dark:bg-gray-800':'hover:bg-neutral-50 dark:hover:bg-gray-800'}`} onClick={() => setActive('preferences')}><Moon className="h-5 w-5" /><span>{t('settings.tabs.preferences')}</span></button>
-            <button className={`w-full flex items-center gap-3 rounded-xl px-3 py-3 ${active==='notifications'?'bg-neutral-100 dark:bg-gray-800':'hover:bg-neutral-50 dark:hover:bg-gray-800'}`} onClick={() => setActive('notifications')}><Bell className="h-5 w-5" /><span>{t('settings.tabs.notifications')}</span></button>
             <button className={`w-full flex items-center gap-3 rounded-xl px-3 py-3 ${active==='help'?'bg-neutral-100 dark:bg-gray-800':'hover:bg-neutral-50 dark:hover:bg-gray-800'}`} onClick={() => setActive('help')}><HelpCircle className="h-5 w-5" /><span>{t('settings.tabs.help')}</span></button>
           </nav>
         </div>
@@ -379,7 +406,20 @@ export default function Settings() {
               <div className="mt-4 space-y-2">
                 <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
                   <div className="flex items-center gap-3"><Moon className="h-5 w-5" /><div><div className="font-medium">{t('settings.preferences.darkMode')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.preferences.darkModeDesc')}</div></div></div>
-                  <div className="flex justify-end"><input type="checkbox" checked={darkMode} onChange={e => setTheme(e.target.checked)} aria-label="Toggle dark mode" /></div>
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={darkMode}
+                      aria-label="Toggle dark mode"
+                      onClick={() => setTheme(!darkMode)}
+                      className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${darkMode ? 'bg-primary' : 'bg-neutral-300 dark:bg-neutral-600'}`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform ${darkMode ? 'translate-x-6' : 'translate-x-1'}`}
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
                   <div className="flex items-center gap-3"><Globe className="h-5 w-5" /><div><div className="font-medium">{t('settings.preferences.language')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.preferences.languageDesc')}</div></div></div>
@@ -397,10 +437,11 @@ export default function Settings() {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
-                  <div className="flex items-center gap-3"><MapPin className="h-5 w-5" /><div><div className="font-medium">{t('settings.preferences.location')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{profile?.city || 'Unknown'}</div></div></div>
+                  <div className="flex items-center gap-3"><MapPin className="h-5 w-5" /><div><div className="font-medium">{t('settings.preferences.location')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{profile?.home_city || profile?.city || (locationLoading ? t('settings.preferences.gettingLocation') : liveLocation) || 'Unknown'}</div></div></div>
                   <div className="flex justify-end">
                     {!changingLocation ? (
                       <button 
+                        type="button"
                         className="rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800"
                         onClick={() => setChangingLocation(true)}
                         disabled={saving}
@@ -408,22 +449,26 @@ export default function Settings() {
                         {t('settings.preferences.change')}
                       </button>
                     ) : (
-                      <div className="flex flex-col gap-2 w-full">
+                      <div className="flex flex-col gap-2 w-full max-w-xs">
                         {!locationMethod ? (
-                          <div className="flex gap-2">
+                          <div className="flex flex-wrap gap-2">
                             <button
-                              className="flex-1 rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
-                              onClick={() => setLocationMethod('gps')}
+                              type="button"
+                              className="flex-1 min-w-[100px] rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
+                              onClick={() => onChangeLocationGPS()}
+                              disabled={saving}
                             >
-                              {t('settings.preferences.useGps')}
+                              {saving ? t('settings.preferences.gettingLocation') : t('settings.preferences.useGps')}
                             </button>
                             <button
-                              className="flex-1 rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
+                              type="button"
+                              className="flex-1 min-w-[100px] rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
                               onClick={() => setLocationMethod('manual')}
                             >
                               {t('settings.preferences.selectCity')}
                             </button>
                             <button
+                              type="button"
                               className="rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
                               onClick={() => {
                                 setChangingLocation(false)
@@ -431,31 +476,12 @@ export default function Settings() {
                                 setSelectedCity('')
                                 setError('')
                               }}
+                              disabled={saving}
                             >
                               {t('settings.preferences.cancel')}
                             </button>
                           </div>
-                        ) : locationMethod === 'gps' ? (
-                          <div className="flex flex-col gap-2">
-                            <button
-                              className="w-full rounded-xl px-3 py-2 bg-primary text-white hover:bg-red-600 text-sm"
-                              onClick={onChangeLocationGPS}
-                              disabled={saving}
-                            >
-                              {saving ? t('settings.preferences.gettingLocation') : t('settings.preferences.getCurrentLocation')}
-                            </button>
-                            <button
-                              className="w-full rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
-                              onClick={() => {
-                                setLocationMethod(null)
-                                setError('')
-                              }}
-                              disabled={saving}
-                            >
-                              {t('settings.preferences.back')}
-                            </button>
-                          </div>
-                        ) : (
+                        ) : locationMethod === 'manual' ? (
                           <div className="flex flex-col gap-2">
                             <select
                               className="w-full border border-neutral-200 dark:border-gray-700 rounded-xl px-3 py-2 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 text-sm"
@@ -469,13 +495,15 @@ export default function Settings() {
                             </select>
                             <div className="flex gap-2">
                               <button
+                                type="button"
                                 className="flex-1 rounded-xl px-3 py-2 bg-primary text-white hover:bg-red-600 text-sm"
-                                onClick={onChangeLocationManual}
+                                onClick={() => onChangeLocationManual()}
                                 disabled={saving || !selectedCity}
                               >
                                 {saving ? t('settings.preferences.saving') : t('settings.account.save')}
                               </button>
                               <button
+                                type="button"
                                 className="rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 text-sm"
                                 onClick={() => {
                                   setLocationMethod(null)
@@ -488,36 +516,10 @@ export default function Settings() {
                               </button>
                             </div>
                           </div>
-                        )}
+                        ) : null}
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {active === 'notifications' && (
-          <div className="space-y-6">
-            <div className="rounded-2xl p-4 bg-white dark:bg-gray-900 border border-neutral-200 dark:border-gray-700 shadow-sm">
-              <div className="text-xl font-semibold dark:text-white">{t('settings.tabs.notifications')}</div>
-              <div className="mt-4 space-y-2">
-                <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
-                  <div className="flex items-center gap-3"><Bell className="h-5 w-5" /><div><div className="font-medium">{t('settings.notifications.push')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.notifications.pushDesc')}</div></div></div>
-                  <div className="flex justify-end"><input type="checkbox" checked={push} onChange={e => saveSetting('push_notifications', e.target.checked)} aria-label="Toggle push notifications" /></div>
-                </div>
-                <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
-                  <div className="flex items-center gap-3"><ShieldAlert className="h-5 w-5" /><div><div className="font-medium">{t('settings.notifications.highRisk')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.notifications.highRiskDesc')}</div></div></div>
-                  <div className="flex justify-end"><input type="checkbox" checked={highRisk} onChange={e => saveSetting('high_risk_alerts', e.target.checked)} aria-label="Toggle high risk alerts" /></div>
-                </div>
-                <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
-                  <div className="flex items-center gap-3"><CalendarDays className="h-5 w-5" /><div><div className="font-medium">{t('settings.notifications.daily')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.notifications.dailyDesc')}</div></div></div>
-                  <div className="flex justify-end"><input type="checkbox" checked={daily} onChange={e => saveSetting('daily_forecast', e.target.checked)} aria-label="Toggle daily forecast" /></div>
-                </div>
-                <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
-                  <div className="flex items-center gap-3"><HeartPulse className="h-5 w-5" /><div><div className="font-medium">{t('settings.notifications.healthTips')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.notifications.healthTipsDesc')}</div></div></div>
-                  <div className="flex justify-end"><input type="checkbox" checked={tips} onChange={e => saveSetting('health_tips', e.target.checked)} aria-label="Toggle health tips" /></div>
                 </div>
               </div>
             </div>
@@ -583,10 +585,7 @@ export default function Settings() {
         )}
 
         <div className="rounded-2xl p-4 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.footer.about')} • Version 1.0.0</div>
-            <button className="flex items-center gap-2 text-primary" onClick={onDeleteAccount} disabled={saving}>{t('settings.footer.deleteAccount')}</button>
-          </div>
+          <div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.footer.about')} • Version 1.0.0</div>
           {error && <div className="mt-2 text-primary text-sm">{error}</div>}
           <button className="mt-4 w-full btn-primary rounded-2xl px-4 py-3 flex items-center justify-center gap-2" onClick={onLogout} disabled={saving}>
             <LogOut className="h-5 w-5" />

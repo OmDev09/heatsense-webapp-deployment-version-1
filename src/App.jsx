@@ -28,7 +28,7 @@ function AppRoutes() {
   
   // All hooks must be called before any conditional returns
   useEffect(() => {
-    const path = location.pathname
+    const path = location.pathname + (location.search || '')
     localStorage.setItem('last_path', path)
   }, [location])
 
@@ -37,6 +37,10 @@ function AppRoutes() {
     const { user, profileExists } = auth
     const last = localStorage.getItem('last_path')
     const currentPath = location.pathname
+    const currentFull = location.pathname + (location.search || '')
+    
+    // Don't redirect if we're already on the stored path (avoids stripping search params e.g. /settings?tab=preferences)
+    if (last && currentFull === last) return
     
     // Don't redirect if we're currently on profile or location pages (user is in onboarding flow)
     if (currentPath === '/profile' || currentPath === '/location') {

@@ -1,4 +1,4 @@
-import { Sun } from 'lucide-react'
+import { Sun, Menu, X } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
@@ -10,17 +10,22 @@ export default function Header() {
   const location = useLocation()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const menuRef = useRef(null)
+  const mobileNavRef = useRef(null)
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuOpen(false)
       }
+      if (mobileNavOpen && mobileNavRef.current && !mobileNavRef.current.contains(event.target)) {
+        setMobileNavOpen(false)
+      }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [mobileNavOpen])
 
   const user = auth?.user
   const logout = auth?.logout
@@ -56,7 +61,7 @@ export default function Header() {
   }
 
   return (
-    <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-6 py-4 bg-white dark:bg-gray-900">
+    <header className="relative z-40 flex flex-wrap items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-6 py-4 bg-white dark:bg-gray-900">
       <div className="flex items-center gap-4">
         <div className="size-8 flex items-center justify-center">
           <Sun className="h-7 w-7 text-amber-500" />
@@ -113,6 +118,74 @@ export default function Header() {
           {t('header.settings')}
         </NavLink>
       </nav>
+      <div className="flex items-center gap-2" ref={mobileNavRef}>
+        <button
+          className="md:hidden flex items-center justify-center size-9 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          onClick={() => setMobileNavOpen(prev => !prev)}
+          aria-label={mobileNavOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileNavOpen}
+        >
+          {mobileNavOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+        {mobileNavOpen && (
+          <div className="absolute top-full left-0 right-0 md:hidden mt-0 py-3 px-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-lg z-50">
+            <nav className="flex flex-col gap-1">
+              <NavLink
+                to="/dashboard"
+                onClick={() => setMobileNavOpen(false)}
+                className={({ isActive }) =>
+                  `px-4 py-3 rounded-lg text-sm font-medium ${
+                    isActive
+                      ? 'bg-primary/10 text-primary dark:bg-primary/20'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  }`
+                }
+              >
+                {t('header.dashboard')}
+              </NavLink>
+              <NavLink
+                to="/advisory"
+                onClick={() => setMobileNavOpen(false)}
+                className={({ isActive }) =>
+                  `px-4 py-3 rounded-lg text-sm font-medium ${
+                    isActive
+                      ? 'bg-primary/10 text-primary dark:bg-primary/20'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  }`
+                }
+              >
+                {t('header.advisory')}
+              </NavLink>
+              <NavLink
+                to="/safety-guide"
+                onClick={() => setMobileNavOpen(false)}
+                className={({ isActive }) =>
+                  `px-4 py-3 rounded-lg text-sm font-medium ${
+                    isActive
+                      ? 'bg-primary/10 text-primary dark:bg-primary/20'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  }`
+                }
+              >
+                {t('header.safetyGuide')}
+              </NavLink>
+              <NavLink
+                to="/settings"
+                onClick={() => setMobileNavOpen(false)}
+                className={({ isActive }) =>
+                  `px-4 py-3 rounded-lg text-sm font-medium ${
+                    isActive
+                      ? 'bg-primary/10 text-primary dark:bg-primary/20'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  }`
+                }
+              >
+                {t('header.settings')}
+              </NavLink>
+            </nav>
+          </div>
+        )}
+      </div>
       <div className="relative" ref={menuRef}>
         <button
           className="flex items-center justify-center size-8 bg-gray-200 dark:bg-gray-700 rounded-full text-gray-600 dark:text-gray-300 font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"

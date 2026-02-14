@@ -3,6 +3,8 @@ import { lazy, Suspense } from 'react'
 const LandingPage = lazy(() => import('./components/landing/LandingPage.jsx'))
 const About = lazy(() => import('./components/landing/About.jsx'))
 const Contact = lazy(() => import('./components/landing/Contact.jsx'))
+const PublicPrivacyPolicy = lazy(() => import('./components/landing/PublicPrivacyPolicy.jsx'))
+const PublicTermsOfService = lazy(() => import('./components/landing/PublicTermsOfService.jsx'))
 const Login = lazy(() => import('./components/auth/Login.jsx'))
 const Signup = lazy(() => import('./components/auth/Signup.jsx'))
 const ProfileForm = lazy(() => import('./components/profile/ProfileForm.jsx'))
@@ -73,6 +75,8 @@ function AppRoutes() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/privacy" element={<PublicPrivacyPolicy />} />
+        <Route path="/terms" element={<PublicTermsOfService />} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
         <Route path="/profile" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>} />
@@ -94,7 +98,7 @@ function AppRoutes() {
 function AppLayout() {
   const location = useLocation()
   const isPublicPage = ['/', '/about', '/contact'].includes(location.pathname)
-  const hideHeaderPages = ['/', '/about', '/contact', '/login', '/signup', '/profile', '/location']
+  const hideHeaderPages = ['/', '/about', '/contact', '/privacy', '/terms', '/login', '/signup', '/profile', '/location']
   const shouldShowHeader = !hideHeaderPages.includes(location.pathname)
 
   return (

@@ -313,8 +313,8 @@ export default function LandingPage() {
                   </div>
                   <p className="text-sm text-[#6C757D] dark:text-gray-400">© 2026 HeatSense AI. All rights reserved.</p>
                   <div className="flex items-center gap-6 text-[#6C757D] dark:text-gray-400">
-                    <a className="text-sm hover:text-primary dark:hover:text-primary transition-colors cursor-pointer" href="/help/privacy" onClick={(e) => { e.preventDefault(); navigate('/help/privacy'); }}>Privacy Policy</a>
-                    <a className="text-sm hover:text-primary dark:hover:text-primary transition-colors cursor-pointer" href="/help/terms" onClick={(e) => { e.preventDefault(); navigate('/help/terms'); }}>Terms of Service</a>
+                    <a className="text-sm hover:text-primary dark:hover:text-primary transition-colors cursor-pointer" href="/privacy" onClick={(e) => { e.preventDefault(); navigate('/privacy'); }}>Privacy Policy</a>
+                    <a className="text-sm hover:text-primary dark:hover:text-primary transition-colors cursor-pointer" href="/terms" onClick={(e) => { e.preventDefault(); navigate('/terms'); }}>Terms of Service</a>
                   </div>
                 </div>
               </footer>

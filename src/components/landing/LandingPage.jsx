@@ -1,4 +1,4 @@
-import { Home, Heart, MapPin, Sun, Thermometer, Users } from 'lucide-react'
+import { Home, Heart, MapPin, Sun, Thermometer, Users, Moon, Shield, Lightbulb } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState, useRef } from 'react'
@@ -10,6 +10,7 @@ export default function LandingPage() {
   const heroRef = useRef(null)
   const featuresRef = useRef(null)
   const stepsRef = useRef(null)
+  const whyHeatSenseRef = useRef(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -26,7 +27,8 @@ export default function LandingPage() {
     const refs = [
       { ref: heroRef, id: 'hero' },
       { ref: featuresRef, id: 'features' },
-      { ref: stepsRef, id: 'steps' }
+      { ref: stepsRef, id: 'steps' },
+      { ref: whyHeatSenseRef, id: 'whyHeatSense' }
     ]
 
     refs.forEach(({ ref, id }) => {
@@ -77,6 +79,16 @@ export default function LandingPage() {
                     }}
                   >
                     Features
+                  </a>
+                  <a 
+                    className="text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors relative hover:after:content-[''] hover:after:absolute hover:after:bottom-[-4px] hover:after:left-0 hover:after:w-full hover:after:h-[2px] hover:after:bg-primary cursor-pointer" 
+                    href="#whyHeatSense"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      document.getElementById('whyHeatSense')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    }}
+                  >
+                    Why HeatSense
                   </a>
                   <a className="text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors relative hover:after:content-[''] hover:after:absolute hover:after:bottom-[-4px] hover:after:left-0 hover:after:w-full hover:after:h-[2px] hover:after:bg-primary" href="/about" onClick={(e) => { e.preventDefault(); navigate('/about'); }}>About</a>
                   <a className="text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors relative hover:after:content-[''] hover:after:absolute hover:after:bottom-[-4px] hover:after:left-0 hover:after:w-full hover:after:h-[2px] hover:after:bg-primary" href="/contact" onClick={(e) => { e.preventDefault(); navigate('/contact'); }}>Contact</a>
@@ -160,7 +172,7 @@ export default function LandingPage() {
               </div>
 
               {/* How It Works Section */}
-              <div ref={stepsRef} id="steps" className="px-4 py-16 md:py-24">
+              <div ref={stepsRef} id="steps" className="px-4 sm:px-6 py-16 md:py-24">
                 <div className={`flex flex-col gap-4 max-w-3xl text-center mx-auto mb-12 transition-all duration-1000 ${isVisible.steps ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                   <h1 className="text-[#212529] dark:text-white tracking-tight text-3xl font-bold leading-tight md:text-4xl">
                     How It Works
@@ -207,6 +219,91 @@ export default function LandingPage() {
                 </div>
               </div>
 
+              {/* Why HeatSense AI Section */}
+              <div ref={whyHeatSenseRef} id="whyHeatSense" className="px-4 sm:px-6 py-16 md:py-24">
+                <div className="max-w-4xl mx-auto">
+                  {/* The Impact */}
+                  <div className={`transition-all duration-1000 ${isVisible.whyHeatSense ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                    <p className="text-sm font-bold tracking-[0.2em] uppercase bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                      The Impact
+                    </p>
+                    <h2 className="mt-3 text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#212529] dark:text-white tracking-tight">
+                      The Staggering Impact of Extreme Heat
+                    </h2>
+                    <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-md border border-gray-100 dark:border-gray-700">
+                        <p className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">48,000+</p>
+                        <p className="mt-3 text-sm text-[#212529] dark:text-gray-300 leading-relaxed">Suspected heatstroke cases in India (2024)</p>
+                      </div>
+                      <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-md border border-gray-100 dark:border-gray-700">
+                        <p className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">417</p>
+                        <p className="mt-3 text-sm text-[#212529] dark:text-gray-300 leading-relaxed">Indian districts under high/very high heat-risk</p>
+                      </div>
+                      <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-md border border-gray-100 dark:border-gray-700">
+                        <p className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">85%</p>
+                        <p className="mt-3 text-sm text-[#212529] dark:text-gray-300 leading-relaxed">Increase in heat-related deaths for seniors (&gt;65)</p>
+                      </div>
+                      <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-md border border-gray-100 dark:border-gray-700">
+                        <p className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">24,223</p>
+                        <p className="mt-3 text-sm text-[#212529] dark:text-gray-300 leading-relaxed">Indian heat-related deaths (1992-2015)</p>
+                      </div>
+                    </div>
+                    {/* Warm Nights */}
+                    <div className="mt-6 bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-md border border-gray-100 dark:border-gray-700 flex items-start gap-4">
+                      <Moon className="h-8 w-8 text-secondary flex-shrink-0 mt-0.5" />
+                      <p className="text-[#212529] dark:text-gray-300 text-sm sm:text-base leading-relaxed">
+                        Warm Nights are increasing faster than hot days, making recovery from daytime heat exposure more difficult.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* The Solution */}
+                  <div className={`mt-16 transition-all duration-1000 ${isVisible.whyHeatSense ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '200ms' }}>
+                    <p className="text-sm font-bold tracking-[0.2em] uppercase bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                      The Solution
+                    </p>
+                    <h2 className="mt-3 text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#212529] dark:text-white tracking-tight">
+                      Closing the Gaps in Heat Safety
+                    </h2>
+                    <div className="mt-8 space-y-4">
+                      <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 shadow-md border border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-start gap-4">
+                        <div className="w-16 h-16 rounded-full bg-pink-50 dark:bg-pink-900/20 flex items-center justify-center flex-shrink-0">
+                          <Shield className="h-8 w-8 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg sm:text-xl font-extrabold text-[#212529] dark:text-white">Health-Centric AI</h3>
+                          <p className="mt-3 text-sm sm:text-base text-[#212529] dark:text-gray-300 leading-relaxed">
+                            Hyperlocal tracking that includes humidity and warm nights for comprehensive heat risk assessment.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 shadow-md border border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-start gap-4">
+                        <div className="w-16 h-16 rounded-full bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center flex-shrink-0">
+                          <Lightbulb className="h-8 w-8 text-secondary" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg sm:text-xl font-extrabold text-[#212529] dark:text-white">Actionable Intelligence</h3>
+                          <p className="mt-3 text-sm sm:text-base text-[#212529] dark:text-gray-300 leading-relaxed">
+                            Clear, direct instructions designed for immediate action when heat risks are detected.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 shadow-md border border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-start gap-4">
+                        <div className="w-16 h-16 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center flex-shrink-0">
+                          <Home className="h-8 w-8 text-secondary" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg sm:text-xl font-extrabold text-[#212529] dark:text-white">Housing-Aware Score</h3>
+                          <p className="mt-3 text-sm sm:text-base text-[#212529] dark:text-gray-300 leading-relaxed">
+                            Risk calculated for your specific living conditions, not generic weather forecasts.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Footer */}
               <footer className="mt-20 border-t border-gray-200 dark:border-gray-700 px-10 py-8">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6">
@@ -214,7 +311,7 @@ export default function LandingPage() {
                     <Sun className="h-6 w-6 text-amber-500" />
                     <h2 className="text-lg font-bold">HeatSense AI</h2>
                   </div>
-                  <p className="text-sm text-[#6C757D] dark:text-gray-400">© 2024 HeatSense AI. All rights reserved.</p>
+                  <p className="text-sm text-[#6C757D] dark:text-gray-400">© 2026 HeatSense AI. All rights reserved.</p>
                   <div className="flex items-center gap-6 text-[#6C757D] dark:text-gray-400">
                     <a className="text-sm hover:text-primary dark:hover:text-primary transition-colors cursor-pointer" href="/help/privacy" onClick={(e) => { e.preventDefault(); navigate('/help/privacy'); }}>Privacy Policy</a>
                     <a className="text-sm hover:text-primary dark:hover:text-primary transition-colors cursor-pointer" href="/help/terms" onClick={(e) => { e.preventDefault(); navigate('/help/terms'); }}>Terms of Service</a>

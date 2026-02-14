@@ -59,10 +59,10 @@ export default function LandingPage() {
           <div className="flex flex-1 justify-center py-5">
             <div className="flex flex-col max-w-[1024px] flex-1">
               {/* TopNavBar */}
-              <header className="flex items-center justify-between whitespace-nowrap px-10 py-4 animate-fade-in">
+              <header className="flex items-center justify-between whitespace-nowrap px-4 sm:px-6 md:px-10 py-3 sm:py-4 animate-fade-in">
                 <div className="flex items-center gap-4 text-[#212529] dark:text-white cursor-pointer" onClick={() => navigate('/')}>
                   <Sun className="h-7 w-7 text-amber-500" />
-                  <h2 className="text-xl font-bold tracking-tight">HeatSense AI</h2>
+                  <h2 className="text-lg sm:text-xl font-bold tracking-tight truncate">HeatSense AI</h2>
                 </div>
                 <div className="hidden md:flex flex-1 justify-center items-center gap-8 text-[#212529] dark:text-gray-300">
                   <a 
@@ -92,14 +92,14 @@ export default function LandingPage() {
               </header>
 
               {/* HeroSection */}
-              <div ref={heroRef} id="hero" className="px-4 py-16 md:py-24 pb-32 md:pb-40 text-center">
+              <div ref={heroRef} id="hero" className="px-4 sm:px-6 py-12 sm:py-16 md:py-24 pb-24 sm:pb-32 md:pb-40 text-center">
                 <div className={`flex flex-col gap-6 items-center transition-all duration-1000 ${isVisible.hero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                   <div className="flex flex-col gap-4 text-center max-w-3xl mx-auto">
-                    <h1 className="text-4xl font-black leading-[1.2] tracking-[-0.033em] md:text-6xl md:leading-[1.15] pb-2">
+                    <h1 className="text-2xl sm:text-4xl font-black leading-[1.2] tracking-[-0.033em] md:text-6xl md:leading-[1.15] pb-2">
                       <span className="text-[#212529] dark:text-white">Chennai's Shield</span>{' '}
                       <span className="animate-gradient inline-block pb-1">Against Extreme Heat.</span>
                     </h1>
-                    <h2 className={`text-[#6C757D] dark:text-gray-400 text-base font-normal leading-normal md:text-lg transition-all duration-1000 delay-300 ${isVisible.hero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                    <h2 className={`text-[#6C757D] dark:text-gray-400 text-sm sm:text-base font-normal leading-normal md:text-lg transition-all duration-1000 delay-300 ${isVisible.hero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                       Real-time alerts designed for families in temporary housing. We help you protect children, elders, and loved ones from dangerous temperatures.
                     </h2>
                   </div>
@@ -113,7 +113,7 @@ export default function LandingPage() {
               </div>
 
               {/* FeatureSection */}
-              <div ref={featuresRef} id="features" className="flex flex-col gap-10 px-4 py-16 md:py-24 mt-16 md:mt-24">
+              <div ref={featuresRef} id="features" className="flex flex-col gap-8 sm:gap-10 px-4 sm:px-6 py-12 sm:py-16 md:py-24 mt-12 sm:mt-16 md:mt-24">
                 <div className={`flex flex-col gap-4 max-w-3xl text-center mx-auto transition-all duration-1000 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                   <h1 className="text-[#212529] dark:text-white tracking-tight text-3xl font-bold leading-tight md:text-4xl">
                     How We Protect Your Community

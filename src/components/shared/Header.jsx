@@ -61,7 +61,7 @@ export default function Header() {
   }
 
   return (
-    <header className="relative z-40 flex flex-wrap items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-6 py-4 bg-white dark:bg-gray-900">
+    <header className="relative z-40 flex flex-wrap items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-3 sm:py-4 bg-white dark:bg-gray-900">
       <div className="flex items-center gap-4">
         <div className="size-8 flex items-center justify-center">
           <Sun className="h-7 w-7 text-amber-500" />

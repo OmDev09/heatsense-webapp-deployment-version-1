@@ -17,12 +17,12 @@ export default function PrivacyPolicy() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#f6f7f8] dark:bg-[#101922] py-8 px-4 sm:px-6 md:px-8">
+    <div className="min-h-screen bg-[#f6f7f8] dark:bg-[#101922] py-6 sm:py-8 px-4 sm:px-6 md:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <Shield className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('privacy.title')}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{t('privacy.title')}</h1>
           </div>
           <p className="text-gray-600 dark:text-gray-400">{t('privacy.lastUpdated')}</p>
         </div>
@@ -37,7 +37,7 @@ export default function PrivacyPolicy() {
           {sections.map((section, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6"
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-4 sm:p-6"
             >
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{section.title}</h2>
               <ul className="space-y-2">

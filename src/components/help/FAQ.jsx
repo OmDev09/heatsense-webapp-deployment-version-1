@@ -20,12 +20,12 @@ export default function FAQ() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#f6f7f8] dark:bg-[#101922] py-8 px-4 sm:px-6 md:px-8">
+    <div className="min-h-screen bg-[#f6f7f8] dark:bg-[#101922] py-6 sm:py-8 px-4 sm:px-6 md:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <HelpCircle className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('faq.title')}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{t('faq.title')}</h1>
           </div>
           <p className="text-gray-600 dark:text-gray-400">{t('faq.subtitle')}</p>
         </div>
@@ -38,9 +38,9 @@ export default function FAQ() {
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? -1 : index)}
-                className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                className="w-full flex items-center justify-between p-4 sm:p-6 text-left hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
               >
-                <h3 className="font-semibold text-lg text-gray-900 dark:text-white pr-4">{faq.question}</h3>
+                <h3 className="font-semibold text-base sm:text-lg text-gray-900 dark:text-white pr-4 text-left">{faq.question}</h3>
                 {openIndex === index ? (
                   <ChevronUp className="h-5 w-5 text-gray-500 flex-shrink-0" />
                 ) : (

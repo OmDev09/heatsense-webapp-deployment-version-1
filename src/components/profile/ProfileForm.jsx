@@ -264,9 +264,9 @@ export default function ProfileForm() {
 
   if (loadingProfile) {
     return (
-      <div className="min-h-screen bg-orange-50 dark:bg-gray-900 px-8 py-10 flex items-center justify-center relative">
+      <div className="min-h-screen bg-orange-50 dark:bg-gray-900 px-4 sm:px-6 md:px-8 py-6 sm:py-10 flex items-center justify-center relative">
         <div className="w-full max-w-[600px] mx-auto">
-          <div className="card rounded-3xl p-6 border border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-800 backdrop-blur-sm">
+          <div className="card rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-800 backdrop-blur-sm">
             <div className="animate-pulse">
               <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-48 mx-auto mb-4"></div>
               <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
@@ -278,15 +278,15 @@ export default function ProfileForm() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 dark:bg-gray-900 px-8 py-10 flex items-center justify-center relative">
+    <div className="min-h-screen bg-orange-50 dark:bg-gray-900 px-4 sm:px-6 md:px-8 py-6 sm:py-10 flex items-center justify-center relative">
       <div className="w-full max-w-[600px] mx-auto">
-        <div className="card rounded-3xl p-6 border border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-800 backdrop-blur-sm">
+        <div className="card rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-800 backdrop-blur-sm">
               <div className="text-center mb-3">
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">{isEditMode ? t('settings.account.editProfile') : t('profile.title')}</div>
+                <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{isEditMode ? t('settings.account.editProfile') : t('profile.title')}</div>
                 <div className="text-xs text-gray-600 dark:text-gray-400 mt-1.5">{isEditMode ? t('settings.account.editProfileDesc') : 'Your data helps our AI predict your personal heat risk.'}</div>
               </div>
               <div className="mt-5 space-y-4">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs text-gray-700 dark:text-gray-300">{t('profile.age')}</label>
                     <input
@@ -323,7 +323,7 @@ export default function ProfileForm() {
                     {fieldErrors.gender && <div className="mt-0.5 text-xs text-primary">{fieldErrors.gender}</div>}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300"><MapPin className="h-3.5 w-3.5" /> <span>{t('profile.city')}</span></label>
                     <div className="mt-1 relative">

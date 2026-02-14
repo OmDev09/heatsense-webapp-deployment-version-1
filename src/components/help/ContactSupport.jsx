@@ -58,7 +58,7 @@ export default function ContactSupport() {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <Phone className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('contact.title')}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{t('contact.title')}</h1>
           </div>
           <p className="text-gray-600 dark:text-gray-400">{t('contact.subtitle')}</p>
         </div>

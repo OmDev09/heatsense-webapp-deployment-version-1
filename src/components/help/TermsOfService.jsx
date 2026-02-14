@@ -19,12 +19,12 @@ export default function TermsOfService() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#f6f7f8] dark:bg-[#101922] py-8 px-4 sm:px-6 md:px-8">
+    <div className="min-h-screen bg-[#f6f7f8] dark:bg-[#101922] py-6 sm:py-8 px-4 sm:px-6 md:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <Scroll className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('terms.title')}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{t('terms.title')}</h1>
           </div>
           <p className="text-gray-600 dark:text-gray-400">{t('terms.lastUpdated')}</p>
         </div>

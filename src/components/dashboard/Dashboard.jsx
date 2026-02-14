@@ -560,7 +560,7 @@ export default function Dashboard() {
           <div className="flex flex-col gap-6 h-full">
             <div>
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('dashboard.greeting', { name })}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white truncate">{t('dashboard.greeting', { name })}</h1>
               </div>
               <p className="text-gray-600 dark:text-gray-400 mt-1">{displayCity} • {today}</p>
             </div>
@@ -572,7 +572,7 @@ export default function Dashboard() {
                   <div className="animate-pulse h-16 bg-gray-200 dark:bg-gray-700 rounded w-32" />
                 ) : (
                   <>
-                    <p className="text-6xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-5xl sm:text-6xl font-bold text-gray-900 dark:text-white">
                       {weatherData?.current ? formatTemp(weatherData.current.temp) : (weather ? formatTemp(weather.temperature) : '--')}
                     </p>
                     <p className="text-gray-600 dark:text-gray-400">
@@ -674,7 +674,7 @@ export default function Dashboard() {
                 <p className="font-bold text-lg mb-4">{t('dashboard.yourRiskLevel')}</p>
                 <div className="flex items-center justify-center gap-4 my-4">
                   <AlertTriangle className="h-16 w-16" />
-                  <p className="text-5xl font-bold">{risk.level} {t('dashboard.risk')}</p>
+                  <p className="text-3xl sm:text-5xl font-bold">{risk.level} {t('dashboard.risk')}</p>
                 </div>
                 
                 {/* Circular Progress Bar */}
@@ -736,7 +736,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-4 flex-1 overflow-y-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1 overflow-y-auto">
                   <div className="flex flex-col">
                     <h4 className="font-semibold text-green-600 dark:text-green-400 mb-2">Do's</h4>
                     <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300 flex-grow">

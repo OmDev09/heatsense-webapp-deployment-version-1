@@ -95,14 +95,14 @@ export default function LocationPermission() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-100 via-orange-100 to-red-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center px-6">
-      <div className="rounded-3xl p-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg max-w-xl w-full text-center">
+    <div className="min-h-screen bg-gradient-to-b from-red-100 via-orange-100 to-red-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center px-4 sm:px-6 py-6">
+      <div className="rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg max-w-xl w-full text-center">
         <div className="flex justify-center">
           <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center">
             <MapPin className="h-10 w-10 text-primary" />
           </div>
         </div>
-        <h1 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">Enable Location Access</h1>
+        <h1 className="mt-4 text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Enable Location Access</h1>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
           We use your location for accurate heat risk and weather for your area.
         </p>

@@ -41,10 +41,10 @@ export default function Contact() {
           <div className="flex flex-1 justify-center py-5">
             <div className="flex flex-col max-w-[1024px] flex-1">
               {/* TopNavBar */}
-              <header className="flex items-center justify-between whitespace-nowrap px-10 py-4 animate-fade-in">
+              <header className="flex items-center justify-between whitespace-nowrap px-4 sm:px-6 md:px-10 py-3 sm:py-4 animate-fade-in">
                 <div className="flex items-center gap-4 text-[#212529] dark:text-white cursor-pointer" onClick={() => navigate('/')}>
                   <Sun className="h-7 w-7 text-amber-500" />
-                  <h2 className="text-xl font-bold tracking-tight">HeatSense AI</h2>
+                  <h2 className="text-lg sm:text-xl font-bold tracking-tight truncate">HeatSense AI</h2>
                 </div>
                 <div className="hidden md:flex flex-1 justify-center items-center gap-8 text-[#212529] dark:text-gray-300">
                   <a className="text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors relative hover:after:content-[''] hover:after:absolute hover:after:bottom-[-4px] hover:after:left-0 hover:after:w-full hover:after:h-[2px] hover:after:bg-primary" href="/#features" onClick={(e) => { e.preventDefault(); navigate('/'); setTimeout(() => { const el = document.getElementById('features'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 100); }}>Features</a>
@@ -61,20 +61,20 @@ export default function Contact() {
                 </div>
               </header>
 
-              <div className="max-w-6xl mx-auto px-4 py-16 md:py-24">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
                 {/* Header */}
                 <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-black text-[#212529] dark:text-white mb-4">Contact Us</h1>
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#212529] dark:text-white mb-4">Contact Us</h1>
           <p className="text-lg text-[#6C757D] dark:text-gray-400 max-w-2xl mx-auto">
             Have questions or feedback? We'd love to hear from you. Get in touch with our team.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
           {/* Contact Information */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-2xl font-bold text-[#212529] dark:text-white mb-6">Get in Touch</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-[#212529] dark:text-white mb-4 sm:mb-6">Get in Touch</h2>
               <p className="text-[#6C757D] dark:text-gray-400 mb-8">
                 Whether you have questions about HeatSense AI, need technical support, or want to partner with us, we're here to help.
               </p>
@@ -134,7 +134,7 @@ export default function Contact() {
           </div>
 
           {/* Contact Form */}
-          <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 shadow-lg">
             <h2 className="text-2xl font-bold text-[#212529] dark:text-white mb-6">Send us a Message</h2>
             
             {submitted ? (

@@ -359,21 +359,21 @@ export default function Settings() {
   if (loading) return <div className="px-4 py-8"><div className="card rounded-3xl p-6 bg-white dark:bg-gray-900 border border-neutral-200 dark:border-gray-700"><div className="animate-pulse h-6 bg-neutral-200 dark:bg-gray-700 rounded w-48" /><div className="mt-4 animate-pulse h-32 bg-neutral-200 dark:bg-gray-700 rounded" /></div></div>
 
   return (
-    <div className="grid grid-cols-12 gap-10 text-neutral-900 dark:text-gray-100 px-4 md:px-8">
-      <aside className="col-span-3">
-        <div className="sticky top-[90px] space-y-4">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 text-neutral-900 dark:text-gray-100 px-4 sm:px-6 md:px-8 py-6 sm:py-8">
+      <aside className="lg:col-span-3">
+        <div className="lg:sticky lg:top-[90px] space-y-4">
           <div className="rounded-2xl p-4 bg-white dark:bg-gray-900 border border-neutral-200 dark:border-gray-700 shadow-sm">
-            <div className="text-xl font-semibold dark:text-white">{t('settings.title')}</div>
+            <div className="text-lg sm:text-xl font-semibold dark:text-white">{t('settings.title')}</div>
           </div>
-          <nav className="rounded-2xl p-2 bg-white dark:bg-gray-900 border border-neutral-200 dark:border-gray-700 shadow-sm">
-            <button className={`w-full flex items-center gap-3 rounded-xl px-3 py-3 ${active==='account'?'bg-neutral-100 dark:bg-gray-800':'hover:bg-neutral-50 dark:hover:bg-gray-800'}`} onClick={() => setActive('account')}><User className="h-5 w-5" /><span>{t('settings.tabs.account')}</span></button>
-            <button className={`w-full flex items-center gap-3 rounded-xl px-3 py-3 ${active==='preferences'?'bg-neutral-100 dark:bg-gray-800':'hover:bg-neutral-50 dark:hover:bg-gray-800'}`} onClick={() => setActive('preferences')}><Moon className="h-5 w-5" /><span>{t('settings.tabs.preferences')}</span></button>
-            <button className={`w-full flex items-center gap-3 rounded-xl px-3 py-3 ${active==='help'?'bg-neutral-100 dark:bg-gray-800':'hover:bg-neutral-50 dark:hover:bg-gray-800'}`} onClick={() => setActive('help')}><HelpCircle className="h-5 w-5" /><span>{t('settings.tabs.help')}</span></button>
+          <nav className="rounded-2xl p-2 bg-white dark:bg-gray-900 border border-neutral-200 dark:border-gray-700 shadow-sm flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-visible">
+            <button className={`flex items-center gap-2 lg:gap-3 rounded-xl px-3 py-2.5 lg:py-3 whitespace-nowrap flex-shrink-0 lg:w-full ${active==='account'?'bg-neutral-100 dark:bg-gray-800':'hover:bg-neutral-50 dark:hover:bg-gray-800'}`} onClick={() => setActive('account')}><User className="h-4 w-4 lg:h-5 lg:w-5" /><span className="text-sm lg:text-base">{t('settings.tabs.account')}</span></button>
+            <button className={`flex items-center gap-2 lg:gap-3 rounded-xl px-3 py-2.5 lg:py-3 whitespace-nowrap flex-shrink-0 lg:w-full ${active==='preferences'?'bg-neutral-100 dark:bg-gray-800':'hover:bg-neutral-50 dark:hover:bg-gray-800'}`} onClick={() => setActive('preferences')}><Moon className="h-4 w-4 lg:h-5 lg:w-5" /><span className="text-sm lg:text-base">{t('settings.tabs.preferences')}</span></button>
+            <button className={`flex items-center gap-2 lg:gap-3 rounded-xl px-3 py-2.5 lg:py-3 whitespace-nowrap flex-shrink-0 lg:w-full ${active==='help'?'bg-neutral-100 dark:bg-gray-800':'hover:bg-neutral-50 dark:hover:bg-gray-800'}`} onClick={() => setActive('help')}><HelpCircle className="h-4 w-4 lg:h-5 lg:w-5" /><span className="text-sm lg:text-base">{t('settings.tabs.help')}</span></button>
           </nav>
         </div>
       </aside>
 
-      <section className="col-span-9 space-y-6">
+      <section className="lg:col-span-9 space-y-6 min-w-0">
         {active === 'account' && (
           <div className="space-y-6">
             <div className="rounded-2xl p-4 bg-white dark:bg-gray-900 border border-neutral-200 dark:border-gray-700 shadow-sm">
@@ -388,10 +388,12 @@ export default function Settings() {
                   <button className="rounded-xl px-3 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800" onClick={() => setChangingPassword(true)}>{t('settings.account.change')}</button>
                 </div>
                 {changingPassword && (
-                  <div className="mt-3 flex items-center gap-2">
-                    <input className="border border-neutral-200 dark:border-gray-700 rounded-2xl px-3 py-2 flex-1 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500" type="password" placeholder={t('settings.account.newPassword')} value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-                    <button className="btn-primary rounded-2xl px-4 py-2" onClick={onChangePassword} disabled={saving}>{t('settings.account.save')}</button>
-                    <button className="rounded-2xl px-4 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800" onClick={() => setChangingPassword(false)} disabled={saving}>{t('settings.account.cancel')}</button>
+                  <div className="mt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <input className="border border-neutral-200 dark:border-gray-700 rounded-2xl px-3 py-2 flex-1 min-w-0 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500" type="password" placeholder={t('settings.account.newPassword')} value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                    <div className="flex gap-2">
+                      <button className="btn-primary rounded-2xl px-4 py-2 flex-1 sm:flex-none" onClick={onChangePassword} disabled={saving}>{t('settings.account.save')}</button>
+                      <button className="rounded-2xl px-4 py-2 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-neutral-800 dark:text-gray-100 hover:bg-neutral-50 dark:hover:bg-gray-800 flex-1 sm:flex-none" onClick={() => setChangingPassword(false)} disabled={saving}>{t('settings.account.cancel')}</button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -404,7 +406,7 @@ export default function Settings() {
             <div className="rounded-2xl p-4 bg-white dark:bg-gray-900 border border-neutral-200 dark:border-gray-700 shadow-sm">
               <div className="text-xl font-semibold dark:text-white">{t('settings.tabs.preferences')}</div>
               <div className="mt-4 space-y-2">
-                <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-3 sm:gap-0 rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
                   <div className="flex items-center gap-3"><Moon className="h-5 w-5" /><div><div className="font-medium">{t('settings.preferences.darkMode')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.preferences.darkModeDesc')}</div></div></div>
                   <div className="flex justify-end">
                     <button
@@ -421,7 +423,7 @@ export default function Settings() {
                     </button>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-3 sm:gap-0 rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
                   <div className="flex items-center gap-3"><Globe className="h-5 w-5" /><div><div className="font-medium">{t('settings.preferences.language')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{t('settings.preferences.languageDesc')}</div></div></div>
                   <div className="flex justify-end">
                     <select
@@ -436,7 +438,7 @@ export default function Settings() {
                     </select>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 items-center rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-3 sm:gap-0 rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 min-h-[70px]">
                   <div className="flex items-center gap-3"><MapPin className="h-5 w-5" /><div><div className="font-medium">{t('settings.preferences.location')}</div><div className="text-sm text-neutral-600 dark:text-gray-400">{profile?.home_city || profile?.city || (locationLoading ? t('settings.preferences.gettingLocation') : liveLocation) || 'Unknown'}</div></div></div>
                   <div className="flex justify-end">
                     {!changingLocation ? (
@@ -530,7 +532,7 @@ export default function Settings() {
           <div className="space-y-6">
             <div className="rounded-2xl p-4 bg-white dark:bg-gray-900 border border-neutral-200 dark:border-gray-700 shadow-sm">
               <div className="text-xl font-semibold dark:text-white">{t('settings.tabs.help')}</div>
-              <div className="mt-4 grid grid-cols-2 gap-3">
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Link to="/help/faq" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><HelpCircle className="h-5 w-5" /><span>{t('settings.help.faqs')}</span></div><ChevronRight className="h-5 w-5" /></Link>
                 <Link to="/help/contact" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><Phone className="h-5 w-5" /><span>{t('settings.help.contactSupport')}</span></div><ChevronRight className="h-5 w-5" /></Link>
                 <Link to="/help/tutorial" className="flex items-center justify-between rounded-xl p-3 border border-neutral-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-neutral-50 dark:hover:bg-gray-800 min-h-[70px]"><div className="flex items-center gap-3"><BookOpen className="h-5 w-5" /><span>{t('settings.help.tutorial')}</span></div><ChevronRight className="h-5 w-5" /></Link>
@@ -545,7 +547,7 @@ export default function Settings() {
                     <p className="text-green-800 dark:text-green-200 text-sm">{t('settings.help.thankYouMessage')}</p>
                   </div>
                 )}
-                <form className="grid grid-cols-2 gap-4" onSubmit={onSubmitContact}>
+                <form className="grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={onSubmitContact}>
                   <input 
                     className="border border-neutral-200 dark:border-gray-700 rounded-2xl px-3 py-2 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500" 
                     placeholder={t('settings.help.contactName')} 
@@ -562,14 +564,14 @@ export default function Settings() {
                     required
                   />
                   <textarea 
-                    className="col-span-2 border border-neutral-200 dark:border-gray-700 rounded-2xl px-3 py-2 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500" 
+                    className="col-span-1 sm:col-span-2 border border-neutral-200 dark:border-gray-700 rounded-2xl px-3 py-2 bg-white dark:bg-gray-900 text-neutral-900 dark:text-gray-100 placeholder-neutral-400 dark:placeholder-gray-500" 
                     rows="4" 
                     placeholder={t('settings.help.contactMessage')} 
                     value={contactForm.message}
                     onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                     required
                   />
-                  <div className="col-span-2 flex justify-end">
+                  <div className="col-span-1 sm:col-span-2 flex justify-end">
                     <button 
                       type="submit"
                       className="btn-primary rounded-2xl px-4 py-3"

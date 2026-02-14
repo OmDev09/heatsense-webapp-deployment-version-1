@@ -263,11 +263,11 @@ export default function SafetyGuide() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f6f7f8] dark:bg-[#101922] py-8 px-4 sm:px-6 md:px-8">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#f6f7f8] dark:bg-[#101922] py-6 sm:py-8 px-4 sm:px-6 md:px-8">
+      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
         {/* Heatstroke: A Medical Emergency */}
-        <section className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
+        <section className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
             {t('safetyGuide.heatstroke.title')}
           </h2>
           <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
@@ -294,8 +294,8 @@ export default function SafetyGuide() {
         </section>
 
         {/* Recognizing Other Heat-Related Illnesses */}
-        <section className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+        <section className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
             {t('safetyGuide.recognizing.title')}
           </h2>
           <div className="space-y-3">
@@ -351,8 +351,8 @@ export default function SafetyGuide() {
         </section>
 
         {/* Find a Cooling Center Near You */}
-        <section className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+        <section className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
             {t('safetyGuide.coolingCenter.title')}
           </h2>
           
@@ -425,7 +425,7 @@ export default function SafetyGuide() {
           </div>
 
           {/* Search Bar */}
-          <form onSubmit={handleSearch} className="flex gap-3 mb-4">
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 mb-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
@@ -439,7 +439,7 @@ export default function SafetyGuide() {
             <button
               type="submit"
               disabled={loadingCenters}
-              className="px-6 py-3 bg-primary hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all min-w-[140px] flex items-center justify-center gap-2"
+              className="px-6 py-3 bg-primary hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all min-w-full sm:min-w-[140px] flex items-center justify-center gap-2"
             >
               {loadingCenters ? (
                 <>

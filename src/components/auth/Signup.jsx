@@ -56,32 +56,32 @@ export default function Signup() {
   }
 
   return (
-    <div className="h-screen grid grid-cols-[40%_60%] overflow-hidden">
-      <div className="h-full">
+    <div className="min-h-screen md:h-screen grid grid-cols-1 md:grid-cols-[minmax(280px,40%)_1fr] overflow-hidden">
+      <div className="hidden md:block h-full min-h-[200px]">
         <LoginSlider />
       </div>
-      <div className="bg-app flex items-center justify-center px-6 py-4 overflow-y-auto">
-        <div className="card w-full max-w-md p-6 rounded-3xl shadow-xl">
+      <div className="bg-app flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8 overflow-y-auto min-h-[100dvh] md:min-h-0">
+        <div className="card w-full max-w-md p-5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-xl">
         <div className="flex flex-col items-center gap-2">
           <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center">
             <Shield className="h-6 w-6 text-primary" />
           </div>
-          <div className="text-2xl font-bold">Create Account</div>
-          <div className="text-sm text-neutral-600">Join the Chennai Resilience Network to protect your family.</div>
+          <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Create Account</div>
+          <div className="text-xs sm:text-sm text-neutral-600 dark:text-gray-400 text-center">Join the Chennai Resilience Network to protect your family.</div>
         </div>
         <form className="mt-4 space-y-3" onSubmit={onSubmit}>
-          <div className="flex items-center gap-2 border rounded-xl px-3 py-2 bg-white shadow-sm focus-within:ring-2 focus-within:ring-primary">
-            <User className="h-5 w-5 text-neutral-600" />
-            <input className="w-full outline-none text-sm" placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} />
+          <div className="flex items-center gap-2 border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 bg-white dark:bg-gray-800 shadow-sm focus-within:ring-2 focus-within:ring-primary">
+            <User className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-600 dark:text-gray-400 flex-shrink-0" />
+            <input className="w-full outline-none text-sm bg-transparent text-gray-900 dark:text-white placeholder-gray-500" placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} />
           </div>
-          <div className="flex items-center gap-2 border rounded-xl px-3 py-2 bg-white shadow-sm focus-within:ring-2 focus-within:ring-primary">
-            <Mail className="h-5 w-5 text-neutral-600" />
-            <input className="w-full outline-none text-sm" placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+          <div className="flex items-center gap-2 border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 bg-white dark:bg-gray-800 shadow-sm focus-within:ring-2 focus-within:ring-primary">
+            <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-600 dark:text-gray-400 flex-shrink-0" />
+            <input className="w-full outline-none text-sm bg-transparent text-gray-900 dark:text-white placeholder-gray-500" placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
           </div>
           <div>
-            <div className="flex items-center gap-2 border rounded-xl px-3 py-2 bg-white shadow-sm focus-within:ring-2 focus-within:ring-primary">
-              <Lock className="h-5 w-5 text-neutral-600" />
-              <input className="w-full outline-none text-sm" placeholder="Set Password" type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} />
+            <div className="flex items-center gap-2 border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 bg-white dark:bg-gray-800 shadow-sm focus-within:ring-2 focus-within:ring-primary">
+              <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-600 dark:text-gray-400 flex-shrink-0" />
+              <input className="w-full outline-none text-sm bg-transparent text-gray-900 dark:text-white placeholder-gray-500 min-w-0" placeholder="Set Password" type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} />
             </div>
             <label className="flex items-center gap-2 text-xs mt-2 cursor-pointer">
               <input 

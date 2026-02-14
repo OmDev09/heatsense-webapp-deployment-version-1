@@ -11,6 +11,7 @@ export default function LandingPage() {
   const featuresRef = useRef(null)
   const stepsRef = useRef(null)
   const whyHeatSenseRef = useRef(null)
+  const teamRef = useRef(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -28,7 +29,8 @@ export default function LandingPage() {
       { ref: heroRef, id: 'hero' },
       { ref: featuresRef, id: 'features' },
       { ref: stepsRef, id: 'steps' },
-      { ref: whyHeatSenseRef, id: 'whyHeatSense' }
+      { ref: whyHeatSenseRef, id: 'whyHeatSense' },
+      { ref: teamRef, id: 'team' }
     ]
 
     refs.forEach(({ ref, id }) => {
@@ -301,6 +303,44 @@ export default function LandingPage() {
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Our Team Section */}
+              <div ref={teamRef} id="team" className="px-4 sm:px-6 py-16 md:py-24">
+                <div className={`flex flex-col gap-4 max-w-3xl text-center mx-auto mb-12 transition-all duration-1000 ${isVisible.team ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                  <h1 className="text-[#212529] dark:text-white tracking-tight text-3xl font-bold leading-tight md:text-4xl">
+                    Our Team
+                  </h1>
+                  <p className="text-[#6C757D] dark:text-gray-400 text-base font-normal leading-normal">
+                    The people behind HeatSense AI
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
+                  {[
+                    { image: '/Photo1.jpg', name: 'Anusha Gupta', role: 'Team Lead & Lead Full-Stack Architect' },
+                    { image: '/Photo2.jpeg', name: 'Hemal Bhirud', role: 'AI Engineer & Integration Specialist' },
+                    { image: '/Photo3.png', name: 'Om Mahale', role: 'Quality Assurance (QA) Lead & Research Analyst' },
+                    { image: '/Photo4.jpg', name: 'Gagandeep Singh', role: 'Frontend Engineer & User Researcher' },
+                    { image: '/Photo5.jpg', name: 'Farhan Parawiranata', role: 'Technical Writer & Media Lead' },
+                    { image: '/Photo6.jpg', name: 'Ahmad Fauzan Prayogi', role: 'System Validation Engineer & Operations' }
+                  ].map((member, index) => (
+                    <div
+                      key={index}
+                      className={`flex flex-col items-center gap-3 transition-all duration-700 ${isVisible.team ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                      style={{ transitionDelay: `${(index % 3) * 150 + 200}ms` }}
+                    >
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover shrink-0 bg-gray-200 dark:bg-gray-700"
+                      />
+                      <div className="text-center">
+                        <p className="text-sm sm:text-base font-bold text-[#212529] dark:text-white">{member.name}</p>
+                        <p className="text-xs sm:text-sm text-[#6C757D] dark:text-gray-400 mt-0.5">{member.role}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 

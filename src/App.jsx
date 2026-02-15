@@ -1,4 +1,5 @@
 import Header from './components/shared/Header.jsx'
+import AppFAB from './components/shared/AppFAB.jsx'
 import { lazy, Suspense } from 'react'
 const LandingPage = lazy(() => import('./components/landing/LandingPage.jsx'))
 const About = lazy(() => import('./components/landing/About.jsx'))
@@ -18,6 +19,7 @@ const Tutorial = lazy(() => import('./components/help/Tutorial.jsx'))
 const PrivacyPolicy = lazy(() => import('./components/help/PrivacyPolicy.jsx'))
 const TermsOfService = lazy(() => import('./components/help/TermsOfService.jsx'))
 const ContactSupport = lazy(() => import('./components/help/ContactSupport.jsx'))
+const DownloadApp = lazy(() => import('./components/download/DownloadApp.jsx'))
 import ProtectedRoute, { PublicRoute } from './components/shared/ProtectedRoute.jsx'
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
@@ -77,6 +79,7 @@ function AppRoutes() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/privacy" element={<PublicPrivacyPolicy />} />
         <Route path="/terms" element={<PublicTermsOfService />} />
+        <Route path="/download-app" element={<DownloadApp />} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
         <Route path="/profile" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>} />
@@ -98,8 +101,10 @@ function AppRoutes() {
 function AppLayout() {
   const location = useLocation()
   const isPublicPage = ['/', '/about', '/contact'].includes(location.pathname)
-  const hideHeaderPages = ['/', '/about', '/contact', '/privacy', '/terms', '/login', '/signup', '/profile', '/location']
+  const hideHeaderPages = ['/', '/about', '/contact', '/privacy', '/terms', '/download-app', '/login', '/signup', '/profile', '/location']
   const shouldShowHeader = !hideHeaderPages.includes(location.pathname)
+
+  const showFAB = location.pathname !== '/download-app'
 
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">
@@ -107,6 +112,7 @@ function AppLayout() {
       <main className={isPublicPage || ['/login', '/signup', '/profile', '/location'].includes(location.pathname) ? "" : ""}>
         <AppRoutes />
       </main>
+      {showFAB && <AppFAB />}
     </div>
   )
 }

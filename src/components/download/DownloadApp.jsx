@@ -58,10 +58,10 @@ export default function DownloadApp() {
             </div>
 
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate('/')}
               className="mt-8 text-sm text-[#6C757D] dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
             >
-              ← Back
+              ← Back to Home
             </button>
           </div>
         </div>
